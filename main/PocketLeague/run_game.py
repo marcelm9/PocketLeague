@@ -5,5 +5,5 @@ if os.name == "nt":
     import ctypes
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
-from src.game import Game
-Game.start()
+from main.PocketLeague.src.menu import Menu
+Menu.start()
