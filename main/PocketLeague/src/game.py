@@ -8,17 +8,13 @@ pygame.init()
 
 class Game:
 
-    screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags=pygame.FULLSCREEN | pygame.SCALED)
     fpsclock = pygame.time.Clock()
     Renderer.init(screen)
     
     def start():
-        run = True
-        i = 0
-        while run:
-            i += 1
-            if i % 120 == 1:
-                print("running")
+
+        while True:
             
             Updater.update()
             Renderer.render()
