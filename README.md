@@ -15,6 +15,6 @@
 - use issues (and labels)
 - write meaningful commit messages
 
-# Launching
+### Launching
 - To start the game, run `poetry run python main/PocketLeague/run_game.py`
 - To start the demo, run `poetry run python main/PocketLeague/run_demo.py`
