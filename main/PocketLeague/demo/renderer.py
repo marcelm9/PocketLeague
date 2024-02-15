@@ -1,5 +1,5 @@
 import pygame
-from .pointManager import PointManager
+from .point_manager import PointManager
 
 class Renderer:
 
