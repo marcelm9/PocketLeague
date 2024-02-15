@@ -8,6 +8,6 @@ class Point:
 
         self.label = px.Label(None, self.name, 32, px.C(self.position) + px.C(0, -10), "midbottom", tc=(0,0,255))
     
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface):
         pygame.draw.circle(surface, (255, 0, 0), self.position, 5)
         self.label.draw_to(surface)

@@ -1,4 +1,5 @@
 import pygame
+pygame.init()
 import PygameXtras as px
 
 from .files.config import FPS, CENTER, WIN_WIDTH, WIN_HEIGHT
@@ -9,7 +10,7 @@ from .classes.renderer import Renderer
 
 class Menu:
 
-    screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=2, flags=pygame.FULLSCREEN | pygame.SCALED)
+    screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags=pygame.FULLSCREEN | pygame.SCALED)
     fpsclock = pygame.time.Clock()
     Renderer.init(screen)
     ControllerManager.init(screen, fpsclock)
