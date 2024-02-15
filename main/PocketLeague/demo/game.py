@@ -1,5 +1,4 @@
 import pygame
-pygame.init()
 
 from .updater import Updater
 from .renderer import Renderer

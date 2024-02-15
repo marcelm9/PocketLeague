@@ -3,27 +3,31 @@ import pygame
 from .files.config import WIN_WIDTH, WIN_HEIGHT, FPS
 from .classes.updater import Updater
 from .classes.renderer import Renderer
-from .classes.menu import Menu
-from .classes.controller_manager import ControllerManager
-
-pygame.init()
+from .classes.field import Field
 
 class Game:
 
-    screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=2, flags=pygame.FULLSCREEN | pygame.SCALED)
-    fpsclock = pygame.time.Clock()
-    Renderer.init(screen)
-    ControllerManager.init(screen, fpsclock)
-    
+    screen: pygame.Surface
+    fpsclock: pygame.time.Clock
+
+    def init(screen: pygame.Surface, fpsclock: pygame.time.Clock):
+        Game.screen = screen
+        Game.fpsclock = fpsclock
+        Renderer.init(screen)
+
+    def debug():
+        Game.init(
+            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags = pygame.FULLSCREEN | pygame.SCALED),
+            pygame.time.Clock()
+        )
+        Game.start()
+
+    def set_config():
+        pass
+
     def start():
-
-        ControllerManager.enough_controllers()
-        ControllerManager.declare_controllers()
-
-        Menu.init(Game.screen, Game.fpsclock)
-        Menu.start()
-
-    def run_game():
+        
+        Field.init(WIN_WIDTH * 0.8, WIN_HEIGHT * 0.8)
 
         while True:
             
