@@ -8,8 +8,13 @@
 - Type hints should generally be used
 - Docstrings for methods which are not 100% self explanatory
 - Imports should always be relative (except for main file)
+- Avoid `*` imports
 
 ### Git
 - always work on a branch (never on master)
 - use issues (and labels)
 - write meaningful commit messages
+
+# Launching
+- To start the game, run `poetry run python main/PocketLeague/run_game.py`
+- To start the demo, run `poetry run python main/PocketLeague/run_demo.py`
