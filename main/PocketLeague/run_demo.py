@@ -1,4 +1,6 @@
 import os
+import pygame
+pygame.init()
 
 # undo windows scaling for this process
 if os.name == "nt":

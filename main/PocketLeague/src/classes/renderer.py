@@ -1,4 +1,5 @@
 import pygame
+from .field import Field
 
 class Renderer:
 
@@ -8,4 +9,4 @@ class Renderer:
         Renderer.screen = screen
 
     def render():
-        pass
+        pygame.draw.rect(Renderer.screen, (255, 255, 255), Field.get_rect(), 1)
