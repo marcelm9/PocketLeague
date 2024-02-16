@@ -27,7 +27,7 @@ class Game:
 
     def start():
         
-        Field.init(WIN_WIDTH * 0.8, WIN_HEIGHT * 0.8)
+        Field.init()
 
         while True:
             
