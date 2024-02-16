@@ -90,3 +90,16 @@ class Collisions:
             return False
         t = max(0, min(1, - b / (2 * a)))
         return t
+    
+    @staticmethod
+    def distance_from_center_to_line(pos1, pos2, circle_center):
+        # Calculate the slope of the line passing through pos1 and pos2
+        if pos2[0] - pos1[0] != 0:
+            slope = (pos2[1] - pos1[1]) / (pos2[0] - pos1[0])
+            intercept = pos1[1] - slope * pos1[0]
+            # Calculate the perpendicular distance from the center to the line
+            distance = abs(slope * circle_center[0] - circle_center[1] + intercept) / math.sqrt(slope**2 + 1)
+        else:
+            # If the line is vertical, calculate distance from the x-coordinate of the line
+            distance = abs(pos1[0] - circle_center[0])
+        return distance

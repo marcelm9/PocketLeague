@@ -5,6 +5,7 @@ from .classes.updater import Updater
 from .classes.renderer import Renderer
 from .classes.field import Field
 from .classes.ball_manager import BallManager
+from .classes.player import Player
 
 class Game:
 
@@ -18,7 +19,7 @@ class Game:
 
     def debug():
         Game.init(
-            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=2, flags = pygame.FULLSCREEN | pygame.SCALED),
+            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags = pygame.FULLSCREEN | pygame.SCALED),
             pygame.time.Clock()
         )
         Game.start()
@@ -29,6 +30,23 @@ class Game:
     def start():
         
         Field.init()
+        p = Player()
+        # p.set_keyboard_input(
+        #     up = pygame.K_w,
+        #     down = pygame.K_s,
+        #     left = pygame.K_a,
+        #     right = pygame.K_d,
+        #     dash = pygame.K_SPACE
+        # )
+        p.set_controller_input(
+            controller_index = 0,
+            joystick = 0,
+            dash_button = 9
+        )
+        p.set_pos((300,300))
+        p.set_name("Marcel")
+        p.set_team(0)
+        p.set_color((255,0,0))
 
         while True:
             

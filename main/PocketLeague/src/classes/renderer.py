@@ -1,6 +1,7 @@
 import pygame
 from .field import Field
 from .ball_manager import BallManager
+from .player import Player
 
 class Renderer:
 
@@ -16,3 +17,6 @@ class Renderer:
         
         for ball in BallManager.get_balls():
             ball.draw(Renderer.screen)
+        
+        for player in Player.players:
+            player.draw(Renderer.screen)

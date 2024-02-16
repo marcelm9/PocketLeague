@@ -5,6 +5,9 @@ from ..files.config import CONTROLLER_INPUT, PLAYER_RADIUS, PLAYER_MAX_SPEED
 from .module_collisions import Collisions
 
 class Player:
+
+    players = []
+
     def __init__(self):
         self.name = None
         self.team = None
@@ -30,6 +33,8 @@ class Player:
         self.__radius = PLAYER_RADIUS
         self.__speed = PLAYER_MAX_SPEED
 
+        Player.players.append(self)
+
     def set_name(self, name):
         self.name = name
 
@@ -41,7 +46,7 @@ class Player:
         self.color = color
 
     def set_pos(self, pos):
-        self.__pos = pos
+        self.__pos = list(pos)
 
     def set_keyboard_input(self, up, down, left, right, dash):
         self.__keys[0] = up
@@ -66,23 +71,24 @@ class Player:
         if CONTROLLER_INPUT:
             assert self.__controller is not None
             if self.__joystick == 0:
-                return self.__controller.get_left_stick()
+                return pygame.Vector2(self.__controller.get_left_stick())
             elif self.__joystick == 1:
-                return self.__controller.get_right_stick()
+                return pygame.Vector2(self.__controller.get_right_stick())
 
         else:
             keys = pygame.key.get_pressed()
             v = pygame.Vector2(0, 0)
             if keys[self.__keys[0]]: # up
                 v[1] -= 1
-            elif keys[self.__keys[1]]: # down
+            if keys[self.__keys[1]]: # down
                 v[1] += 1
-            elif keys[self.__keys[2]]: # left
+            if keys[self.__keys[2]]: # left
                 v[0] -= 1
-            elif keys[self.__keys[3]]: # right
+            if keys[self.__keys[3]]: # right
                 v[0] += 1
 
-            v.scale_to_length(1)
+            if v.length() > 0:
+                v.scale_to_length(1)
             return v
 
     def get_input_for_dash(self) -> bool:
@@ -102,9 +108,11 @@ class Player:
             self.__pos[1] += inp[1]
 
         for line in Field.get_lines():
-            if dist := Collisions.lineCircle(line.pos1, line.pos2, self.__pos, self.__radius):
+            if Collisions.lineCircle(line.pos1, line.pos2, self.__pos, self.__radius):
+                dist_center_from_line = Collisions.distance_from_center_to_line(line.pos1, line.pos2, self.__pos)
+                dist_move = self.__radius - dist_center_from_line
                 v = pygame.Vector2(line.bounce_direction)
-                v.scale_to_length(dist * 1)
+                v.scale_to_length(dist_move)
                 self.__pos[0] += v[0]
                 self.__pos[1] += v[1]
 

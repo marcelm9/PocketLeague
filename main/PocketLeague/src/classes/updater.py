@@ -1,5 +1,6 @@
 import pygame
 from .ball_manager import BallManager
+from .player import Player
 
 class Updater:
     def update():
@@ -18,6 +19,8 @@ class Updater:
                 elif event.button == 3:
                     BallManager.add_ball(event.pos, (1, -1), 5, 10)
 
+        for player in Player.players:
+            player.update()
 
         for ball in BallManager.get_balls():
             ball.update()
