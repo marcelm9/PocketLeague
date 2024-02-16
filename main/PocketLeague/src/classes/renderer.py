@@ -9,4 +9,6 @@ class Renderer:
         Renderer.screen = screen
 
     def render():
-        pygame.draw.rect(Renderer.screen, (255, 255, 255), Field.get_rect(), 1)
+        Renderer.screen.fill((0,0,0))
+        for line in Field.get_lines():
+            line.draw(Renderer.screen)
