@@ -1,4 +1,5 @@
 import pygame
+from .ball_manager import BallManager
 
 class Updater:
     def update():
@@ -11,3 +12,14 @@ class Updater:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    BallManager.add_ball(event.pos, (-1, -1), 5, 10)
+                elif event.button == 3:
+                    BallManager.add_ball(event.pos, (1, -1), 5, 10)
+
+
+        for ball in BallManager.get_balls():
+            ball.update()
+
+

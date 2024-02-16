@@ -4,6 +4,7 @@ from .files.config import WIN_WIDTH, WIN_HEIGHT, FPS
 from .classes.updater import Updater
 from .classes.renderer import Renderer
 from .classes.field import Field
+from .classes.ball_manager import BallManager
 
 class Game:
 
@@ -17,7 +18,7 @@ class Game:
 
     def debug():
         Game.init(
-            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags = pygame.FULLSCREEN | pygame.SCALED),
+            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=2, flags = pygame.FULLSCREEN | pygame.SCALED),
             pygame.time.Clock()
         )
         Game.start()
@@ -36,3 +37,4 @@ class Game:
             
             pygame.display.flip()
             Game.fpsclock.tick(FPS)
+            pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")

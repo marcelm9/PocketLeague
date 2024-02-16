@@ -18,10 +18,13 @@ class Field:
         rc = rect_center
         rl = rect_left
         rr = rect_right
+
+        a = 100
         
         # clockwise
         point_list = [
             C(rc.topleft) + C(FIELD_CORNER_SMOOTHING, 0),
+            C(CENTER[0], rc.top + a),
             C(rc.topright) - C(FIELD_CORNER_SMOOTHING, 0),
             C(rc.topright) + C(0, FIELD_CORNER_SMOOTHING),
             C(rr.topleft),
@@ -30,6 +33,7 @@ class Field:
             C(rr.bottomleft),
             C(rc.bottomright) - C(0, FIELD_CORNER_SMOOTHING),
             C(rc.bottomright) - C(FIELD_CORNER_SMOOTHING, 0),
+            C(CENTER[0], rc.bottom - a),
             C(rc.bottomleft) + C(FIELD_CORNER_SMOOTHING, 0),
             C(rc.bottomleft) - C(0, FIELD_CORNER_SMOOTHING),
             C(rl.bottomright),
