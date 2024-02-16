@@ -1,6 +1,6 @@
 import pygame
 
-from .files.config import WIN_WIDTH, WIN_HEIGHT, FPS
+from .files.config import WIN_WIDTH, WIN_HEIGHT, FPS, CENTER, BALL_RADIUS
 from .classes.updater import Updater
 from .classes.renderer import Renderer
 from .classes.field import Field
@@ -47,6 +47,10 @@ class Game:
         p.set_name("Marcel")
         p.set_team(0)
         p.set_color((255,0,0))
+
+        BallManager.add_ball(
+            CENTER, (0,0), BALL_RADIUS
+        )
 
         while True:
             
