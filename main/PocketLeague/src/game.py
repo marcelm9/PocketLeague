@@ -49,7 +49,7 @@ class Game:
         p.set_color((255,0,0))
 
         BallManager.add_ball(
-            CENTER, (0,0), BALL_RADIUS
+            CENTER, BALL_RADIUS
         )
 
         while True:

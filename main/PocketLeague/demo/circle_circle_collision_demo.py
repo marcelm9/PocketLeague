@@ -55,7 +55,7 @@ def handle_collision(moving_circle, static_circle, moving_velocity):
         normal = normalize(normal)
 
         # Calculate angle of incidence
-        incidence_angle = math.atan2(moving_velocity.y, moving_velocity.x) - math.atan2(normal.y, normal.x)
+        # incidence_angle = math.atan2(moving_velocity.y, moving_velocity.x) - math.atan2(normal.y, normal.x)
 
         # Reflect velocity vector
         reflected_velocity = reflect(moving_velocity, normal)
