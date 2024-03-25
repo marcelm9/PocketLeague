@@ -30,7 +30,7 @@ class Game:
     def start():
         
         Field.init()
-        p = Player()
+        p1 = Player()
         # p.set_keyboard_input(
         #     up = pygame.K_w,
         #     down = pygame.K_s,
@@ -38,15 +38,26 @@ class Game:
         #     right = pygame.K_d,
         #     dash = pygame.K_SPACE
         # )
-        p.set_controller_input(
+        p1.set_controller_input(
             controller_index = 0,
             joystick = 0,
             dash_button = 9
         )
-        p.set_pos((300,300))
-        p.set_name("Marcel")
-        p.set_team(0)
-        p.set_color((255,0,0))
+        p1.set_pos((300,300))
+        p1.set_name("Marcel")
+        p1.set_team(0)
+        p1.set_color((255,0,0))
+
+        p2 = Player()
+        p2.set_controller_input(
+            controller_index = 0,
+            joystick = 1,
+            dash_button = 10
+        )
+        p2.set_pos((1500,300))
+        p2.set_name("Pascal")
+        p2.set_team(1)
+        p2.set_color((0,255,0))
 
         BallManager.add_ball(
             CENTER, BALL_RADIUS
@@ -58,5 +69,4 @@ class Game:
             Renderer.render()
             
             pygame.display.flip()
-            Game.fpsclock.tick(FPS)
             pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")
