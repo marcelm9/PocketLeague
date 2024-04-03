@@ -1,7 +1,9 @@
 import pygame
-from ..files.config import CENTER, FIELD_WIDTH, FIELD_HEIGHT, GOAL_SIZE, GOAL_DEPTH, FIELD_CORNER_SMOOTHING
+import pymunk
+from ..files.config import CENTER, FIELD_WIDTH, FIELD_HEIGHT, GOAL_SIZE, GOAL_DEPTH, FIELD_CORNER_SMOOTHING, FIELD_LINE_SIZE
 from .line import Line
 from PygameXtras import C
+from .space import Space
 
 class Field:
 
@@ -19,12 +21,13 @@ class Field:
         rl = rect_left
         rr = rect_right
 
-        a = 100
+        center_ditch = 100
+
         
         # clockwise
         point_list = [
             C(rc.topleft) + C(FIELD_CORNER_SMOOTHING, 0),
-            C(CENTER[0], rc.top + a),
+            C(CENTER[0], rc.top + center_ditch),
             C(rc.topright) - C(FIELD_CORNER_SMOOTHING, 0),
             C(rc.topright) + C(0, FIELD_CORNER_SMOOTHING),
             C(rr.topleft),
@@ -33,7 +36,7 @@ class Field:
             C(rr.bottomleft),
             C(rc.bottomright) - C(0, FIELD_CORNER_SMOOTHING),
             C(rc.bottomright) - C(FIELD_CORNER_SMOOTHING, 0),
-            C(CENTER[0], rc.bottom - a),
+            C(CENTER[0], rc.bottom - center_ditch),
             C(rc.bottomleft) + C(FIELD_CORNER_SMOOTHING, 0),
             C(rc.bottomleft) - C(0, FIELD_CORNER_SMOOTHING),
             C(rl.bottomright),
@@ -44,10 +47,22 @@ class Field:
             C(rc.topleft) + C(FIELD_CORNER_SMOOTHING, 0),
         ]
 
+        wall = pymunk.Body(body_type=pymunk.Body.STATIC)
+        wall.position = (0, 0)
+
+        wall_shapes = []
+
         for i in range(len(point_list) - 1):
+
             start = point_list[i]
             end = point_list[i+1]
 
+            # for ball collision
+            shape = pymunk.Segment(wall, tuple(start), tuple(end), FIELD_LINE_SIZE)
+            shape.elasticity = 1
+            wall_shapes.append(shape)
+
+            # for player collision
             vector = pygame.Vector2(
                 end[0] - start[0],
                 end[1] - start[1]
@@ -63,6 +78,8 @@ class Field:
             Field.lines.append(
                 Line(start, end, vector, collisions)
             )
+
+        Space.space.add(wall, *wall_shapes)
 
     def get_lines():
         return Field.lines

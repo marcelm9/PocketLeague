@@ -1,4 +1,5 @@
 import pygame
+from ..files.config import FIELD_LINE_SIZE
 
 class Line:
     def __init__(self, pos1: tuple, pos2: tuple, bounce_direction: tuple, collisions: bool):
@@ -24,5 +25,5 @@ class Line:
         assert len(self.pos2) == 2
 
     def draw(self, surface):
-        pygame.draw.line(surface, (255, 255, 255) if self.collisions else (0,0,255), self.pos1, self.pos2, 1)
-        pygame.draw.line(surface, (0,255,0), self.__center, (self.__center[0] + self.__bounce_vector[0], self.__center[1] + self.__bounce_vector[1]))
+        pygame.draw.line(surface, (255, 255, 255) if self.collisions else (0,0,255), self.pos1, self.pos2, FIELD_LINE_SIZE)
+        pygame.draw.line(surface, (0,255,0), self.__center, (self.__center[0] + self.__bounce_vector[0], self.__center[1] + self.__bounce_vector[1]), FIELD_LINE_SIZE)

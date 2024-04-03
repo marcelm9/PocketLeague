@@ -1,8 +1,10 @@
 import pygame
 import PygameXtras as px
+import pymunk
 from .field import Field
 from ..files.config import CONTROLLER_INPUT, PLAYER_RADIUS, PLAYER_MAX_SPEED
 from .module_collisions import Collisions
+from .space import Space
 
 class Player:
 
@@ -29,13 +31,19 @@ class Player:
         ]
 
         # stats
-        self.__pos = (0,0)
         self.__radius = PLAYER_RADIUS
         self.__speed = PLAYER_MAX_SPEED
         self.__current_speed = 0
         self.__current_direction = pygame.Vector2(0,0)
 
+        # pymunk stuff
+        self.__body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
+        self.__body.position = (0, 0)
+        self.__shape = pymunk.Circle(self.__body, self.__radius)
+        self.__shape.elasticity = 0.9
+
         Player.players.append(self)
+        Space.space.add(self.__body, self.__shape)
 
     def set_name(self, name):
         self.name = name
@@ -48,10 +56,10 @@ class Player:
         self.color = color
 
     def set_pos(self, pos):
-        self.__pos = list(pos)
+        self.__body.position = pos
 
     def get_pos(self):
-        return self.__pos
+        return self.__body.position
     
     def get_radius(self):
         return self.__radius
@@ -112,29 +120,36 @@ class Player:
             inp.scale_to_length(
                 min(self.__speed, inp.length() * self.__speed)
             )
-            self.__pos[0] += inp[0]
-            self.__pos[1] += inp[1]
             self.__current_speed = inp.length()
             self.__current_direction = inp.normalize()
+
+            # pymunk
+            self.__body.velocity = tuple(inp)
         else:
             self.__current_direction = pygame.Vector2(0,0)
             self.__current_speed = 0
+            self.__body.velocity = (0,0)
 
+    def keep_in_bounds(self):
         for line in Field.get_lines():
-            if Collisions.lineCircle(line.pos1, line.pos2, self.__pos, self.__radius):
-                dist_center_from_line = Collisions.distance_from_center_to_line(line.pos1, line.pos2, self.__pos)
+            if Collisions.lineCircle(line.pos1, line.pos2, self.__body.position, self.__radius):
+                dist_center_from_line = Collisions.distance_from_center_to_line(line.pos1, line.pos2, self.__body.position)
                 dist_move = self.__radius - dist_center_from_line
                 v = pygame.Vector2(line.bounce_direction)
                 v.scale_to_length(dist_move)
-                self.__pos[0] += v[0]
-                self.__pos[1] += v[1]
+
+                # pymunk
+                self.__body.position = (
+                    self.__body.position[0] + v[0],
+                    self.__body.position[1] + v[1],
+                )
 
     def draw(self, surface):
         if self.team == 0:
-            pygame.draw.circle(surface, (0,0,255), self.__pos, self.__radius)
+            pygame.draw.circle(surface, (0,0,255), self.__body.position, self.__radius)
         elif self.team == 1:
-            pygame.draw.circle(surface, (255,255,0), self.__pos, self.__radius)
-        pygame.draw.circle(surface, self.color, self.__pos, self.__radius * 0.5)
+            pygame.draw.circle(surface, (255,255,0), self.__body.position, self.__radius)
+        pygame.draw.circle(surface, self.color, self.__body.position, self.__radius * 0.5)
 
     def get_speed(self):
         return self.__current_speed

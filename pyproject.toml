@@ -11,6 +11,7 @@ packages = [{ include = "PocketLeague", from = "main" }]
 python = "^3.11"
 pygame-ce = "^2.4.0"
 pygamextras = "^1.1.4"
+pymunk = "^6.6.0"
 
 [build-system]
 requires = ["poetry-core"]
