@@ -1,4 +1,5 @@
 import pygame
+from .HUD import HUD
 from .field import Field
 from .ball_manager import BallManager
 from .player import Player
@@ -20,3 +21,5 @@ class Renderer:
         
         for player in Player.players:
             player.draw(Renderer.screen)
+        
+        HUD.draw()

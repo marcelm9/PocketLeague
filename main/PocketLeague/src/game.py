@@ -6,6 +6,7 @@ from .classes.renderer import Renderer
 from .classes.field import Field
 from .classes.ball_manager import BallManager
 from .classes.player import Player
+from .classes.HUD import HUD
 
 class Game:
 
@@ -58,6 +59,10 @@ class Game:
         p2.set_name("Pascal")
         p2.set_team(1)
         p2.set_color((0,255,0))
+
+
+
+        HUD.init(Game.screen)
 
         BallManager.add_ball(
             CENTER, BALL_RADIUS
