@@ -32,6 +32,8 @@ class Player:
         self.__pos = (0,0)
         self.__radius = PLAYER_RADIUS
         self.__speed = PLAYER_MAX_SPEED
+        self.__current_speed = 0
+        self.__current_direction = pygame.Vector2(0,0)
 
         Player.players.append(self)
 
@@ -47,6 +49,12 @@ class Player:
 
     def set_pos(self, pos):
         self.__pos = list(pos)
+
+    def get_pos(self):
+        return self.__pos
+    
+    def get_radius(self):
+        return self.__radius
 
     def set_keyboard_input(self, up, down, left, right, dash):
         self.__keys[0] = up
@@ -106,6 +114,11 @@ class Player:
             )
             self.__pos[0] += inp[0]
             self.__pos[1] += inp[1]
+            self.__current_speed = inp.length()
+            self.__current_direction = inp.normalize()
+        else:
+            self.__current_direction = pygame.Vector2(0,0)
+            self.__current_speed = 0
 
         for line in Field.get_lines():
             if Collisions.lineCircle(line.pos1, line.pos2, self.__pos, self.__radius):
@@ -122,3 +135,9 @@ class Player:
         elif self.team == 1:
             pygame.draw.circle(surface, (255,255,0), self.__pos, self.__radius)
         pygame.draw.circle(surface, self.color, self.__pos, self.__radius * 0.5)
+
+    def get_speed(self):
+        return self.__current_speed
+
+    def get_direction(self):
+        return self.__current_direction

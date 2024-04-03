@@ -1,6 +1,8 @@
 import pygame
 import math
 
+
+
 class Collisions:
 
     @staticmethod

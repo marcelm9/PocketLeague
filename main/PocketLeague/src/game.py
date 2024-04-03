@@ -108,7 +108,7 @@ class Game:
         HUD.init(Game.screen)
 
         BallManager.add_ball(
-            CENTER, (0,0), BALL_RADIUS
+            CENTER, BALL_RADIUS
         )
 
         while True:
