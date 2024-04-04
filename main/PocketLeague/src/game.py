@@ -32,13 +32,6 @@ class Game:
         
         Field.init()
         p1 = Player()
-        # p.set_keyboard_input(
-        #     up = pygame.K_w,
-        #     down = pygame.K_s,
-        #     left = pygame.K_a,
-        #     right = pygame.K_d,
-        #     dash = pygame.K_SPACE
-        # )
         p1.set_controller_input(
             controller_index = 0,
             joystick = 0,
@@ -56,9 +49,10 @@ class Game:
             dash_button = 10
         )
         p2.set_pos((1500,300))
-        p2.set_name("Pascal")
+        p2.set_name("Pascal (Bot)")
         p2.set_team(1)
         p2.set_color((0,255,0))
+        p2.make_bot()
 
 
 
