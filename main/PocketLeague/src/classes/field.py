@@ -21,7 +21,7 @@ class Field:
         rl = rect_left
         rr = rect_right
 
-        center_ditch = 100
+        center_ditch = 0
 
         
         # clockwise

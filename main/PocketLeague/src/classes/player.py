@@ -2,9 +2,10 @@ import pygame
 import PygameXtras as px
 import pymunk
 from .field import Field
-from ..files.config import CONTROLLER_INPUT, PLAYER_RADIUS, PLAYER_MAX_SPEED
+from ..files.config import CONTROLLER_INPUT, PLAYER_RADIUS, PLAYER_MAX_SPEED, TEAM0_COLOR, TEAM1_COLOR
 from .module_collisions import Collisions
 from .space import Space
+from .ball_manager import BallManager
 
 class Player:
 
@@ -23,11 +24,11 @@ class Player:
 
         # keyboard input
         self.__keys = [
-            None, # up
-            None, # down
-            None, # left
-            None, # right
-            None, # dash
+            pygame.K_w, # up
+            pygame.K_s, # down
+            pygame.K_a, # left
+            pygame.K_d, # right
+            pygame.K_SPACE, # dash
         ]
 
         # stats
@@ -42,8 +43,14 @@ class Player:
         self.__shape = pymunk.Circle(self.__body, self.__radius)
         self.__shape.elasticity = 0.9
 
+        # bot
+        self.__is_bot = False
+
         Player.players.append(self)
         Space.space.add(self.__body, self.__shape)
+
+    def make_bot(self):
+        self.__is_bot = True
 
     def set_name(self, name):
         self.name = name
@@ -115,7 +122,20 @@ class Player:
             return keys[self.__keys[4]] # dash
 
     def update(self):
-        inp = self.get_input_for_direction()
+
+        if self.__is_bot:
+            balls = BallManager.get_balls()
+            if len(balls) == 0:
+                inp = pygame.Vector2(0, 0)
+            else:
+                inp = pygame.Vector2(
+                    balls[0].get_pos()[0] - self.get_pos()[0],
+                    balls[0].get_pos()[1] - self.get_pos()[1],
+                )
+
+        else:
+            inp = self.get_input_for_direction()
+
         if inp.length() > 0:
             inp.scale_to_length(
                 min(self.__speed, inp.length() * self.__speed)
@@ -125,6 +145,23 @@ class Player:
 
             # pymunk
             self.__body.velocity = tuple(inp)
+
+            for player in Player.players:
+                if player is self:
+                    continue
+                if Collisions.circleCircle(self.get_pos(), self.get_radius(), player.get_pos(), player.get_radius()):
+                    distance_between_players = px.get_distance(self.get_pos(), player.get_pos())
+                    distance_to_be_moved = self.get_radius() + player.get_radius() - distance_between_players
+                    direction_to_be_moved = pygame.Vector2(
+                        self.get_pos()[0] - player.get_pos()[0],
+                        self.get_pos()[1] - player.get_pos()[1],
+                    )
+                    direction_to_be_moved.scale_to_length(distance_to_be_moved)
+                    self.set_pos((
+                        self.get_pos()[0] + direction_to_be_moved[0],
+                        self.get_pos()[1] + direction_to_be_moved[1],
+                    ))
+
         else:
             self.__current_direction = pygame.Vector2(0,0)
             self.__current_speed = 0
@@ -146,9 +183,9 @@ class Player:
 
     def draw(self, surface):
         if self.team == 0:
-            pygame.draw.circle(surface, (0,0,255), self.__body.position, self.__radius)
+            pygame.draw.circle(surface, TEAM0_COLOR, self.__body.position, self.__radius)
         elif self.team == 1:
-            pygame.draw.circle(surface, (255,255,0), self.__body.position, self.__radius)
+            pygame.draw.circle(surface, TEAM1_COLOR, self.__body.position, self.__radius)
         pygame.draw.circle(surface, self.color, self.__body.position, self.__radius * 0.5)
 
     def get_speed(self):

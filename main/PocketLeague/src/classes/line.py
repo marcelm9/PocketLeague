@@ -7,6 +7,7 @@ class Line:
         self.pos2 = pos2
         self.bounce_direction = bounce_direction
         self.collisions = collisions
+        self.__color = (255, 255, 255) if self.collisions else (0,0,255)
 
         # debug
         v1 = pygame.Vector2(bounce_direction)
@@ -25,5 +26,7 @@ class Line:
         assert len(self.pos2) == 2
 
     def draw(self, surface):
-        pygame.draw.line(surface, (255, 255, 255) if self.collisions else (0,0,255), self.pos1, self.pos2, FIELD_LINE_SIZE)
-        pygame.draw.line(surface, (0,255,0), self.__center, (self.__center[0] + self.__bounce_vector[0], self.__center[1] + self.__bounce_vector[1]), FIELD_LINE_SIZE)
+        pygame.draw.line(surface, self.__color, self.pos1, self.pos2, FIELD_LINE_SIZE)
+        # pygame.draw.line(surface, (0,255,0), self.__center, (self.__center[0] + self.__bounce_vector[0], self.__center[1] + self.__bounce_vector[1]), 1)
+        pygame.draw.circle(surface, self.__color, self.pos1, FIELD_LINE_SIZE // 2)
+        pygame.draw.circle(surface, self.__color, self.pos2, FIELD_LINE_SIZE // 2)
