@@ -37,7 +37,7 @@ class Game:
             joystick = 0,
             dash_button = 9
         )
-        p1.set_pos((300,300))
+        p1.set_pos((0,0))
         p1.set_name("Marcel")
         p1.set_team(0)
         p1.set_color((255,0,0))
@@ -48,10 +48,12 @@ class Game:
             joystick = 1,
             dash_button = 10
         )
-        p2.set_pos((1500,300))
+        p2.set_pos((0,0))
         p2.set_name("Pascal")
         p2.set_team(1)
         p2.set_color((0,255,0))
+
+        Player.reset_all_player_positions()
 
 
 
