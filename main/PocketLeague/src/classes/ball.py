@@ -1,17 +1,16 @@
 import pygame
 import pymunk
 
-from ..files.config import BALL_COLOR
+from ..files.config import BALL_COLOR, BALL_RADIUS, BALL_SPAWN
 from .space import Space
 
 
 class Ball:
-    def __init__(self, pos, radius, vector=(0, 0)):
-        self.vector = pygame.Vector2(vector)
-        self.radius = radius
+    def __init__(self):
+        self.radius = BALL_RADIUS
 
         self.__body = pymunk.Body(body_type=pymunk.Body.DYNAMIC)
-        self.__body.position = pos
+        self.__body.position = BALL_SPAWN
         self.__body.mass = 1
         self.__shape = pymunk.Circle(self.__body, radius=self.radius)
         self.__shape.density = 1
@@ -27,3 +26,7 @@ class Ball:
 
     def get_pos(self):
         return self.__body.position
+
+    def reset(self):
+        self.__body.velocity = (0, 0)
+        self.__body.position = BALL_SPAWN

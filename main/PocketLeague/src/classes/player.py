@@ -1,15 +1,33 @@
+import random
+
 import pygame
 import PygameXtras as px
 import pymunk
+
+from ..files.config import *
+from .ball_manager import BallManager
 from .field import Field
-from ..files.config import CONTROLLER_INPUT, PLAYER_RADIUS, PLAYER_MAX_SPEED, TEAM0_COLOR, TEAM1_COLOR
 from .module_collisions import Collisions
 from .space import Space
-from .ball_manager import BallManager
+
 
 class Player:
 
     players = []
+
+    @staticmethod
+    def reset_all_player_positions():
+        random_pos = random.choice(PLAYER_SPAWNS_2_PLAYERS)
+        for player in Player.players:
+            if player.team == 0:
+                player.set_pos(
+                    (BALL_SPAWN[0] + random_pos[0], BALL_SPAWN[1] + random_pos[1])
+                )
+            else:
+                # inverse
+                player.set_pos(
+                    (BALL_SPAWN[0] - random_pos[0], BALL_SPAWN[1] - random_pos[1])
+                )
 
     def __init__(self):
         self.name = None
