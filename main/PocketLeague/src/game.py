@@ -49,18 +49,15 @@ class Game:
             dash_button = 10
         )
         p2.set_pos((1500,300))
-        p2.set_name("Pascal (Bot)")
+        p2.set_name("Pascal")
         p2.set_team(1)
         p2.set_color((0,255,0))
-        p2.make_bot()
 
 
 
         HUD.init(Game.screen)
 
-        BallManager.add_ball(
-            CENTER, BALL_RADIUS
-        )
+        BallManager.create_ball()
 
         while True:
             

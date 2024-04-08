@@ -16,8 +16,7 @@ class Renderer:
         for line in Field.get_lines():
             line.draw(Renderer.screen)
         
-        for ball in BallManager.get_balls():
-            ball.draw(Renderer.screen)
+        BallManager.get_ball().draw(Renderer.screen)
         
         for player in Player.players:
             player.draw(Renderer.screen)
