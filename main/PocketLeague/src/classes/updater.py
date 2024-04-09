@@ -1,6 +1,7 @@
 import pygame
+import time
 
-from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE
+from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, MATCH_DURATION_IN_SECONDS
 from .ball_manager import BallManager
 from .player import Player
 from .space import Space
@@ -47,3 +48,5 @@ class Updater:
             HUD.update_score()
             BallManager.reset_ball()
             Player.reset_all_player_positions()
+
+        HUD.update_time(MATCH_DURATION_IN_SECONDS - (time.time() - MatchStats.get_start_time()))

@@ -1,12 +1,13 @@
 import pygame
 
-from .files.config import WIN_WIDTH, WIN_HEIGHT, FPS, CENTER, BALL_RADIUS
+from .files.config import WIN_WIDTH, WIN_HEIGHT
 from .classes.updater import Updater
 from .classes.renderer import Renderer
 from .classes.field import Field
 from .classes.ball_manager import BallManager
 from .classes.player import Player
 from .classes.HUD import HUD
+from .classes.match_stats import MatchStats
 
 class Game:
 
@@ -60,6 +61,7 @@ class Game:
         HUD.init(Game.screen)
 
         BallManager.create_ball()
+        MatchStats.start_match()
 
         while True:
             
