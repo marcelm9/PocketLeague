@@ -187,7 +187,7 @@ class HUD:
         HUD.team_1_goal_label.update_text(MatchStats.get_goals_team1())
 
     def update_time_display():
-        m, s = int(MatchStats.get_match_seconds_left() // 60), math.ceil(MatchStats.get_match_seconds_left() % 60)
+        m, s = int(MatchStats.get_match_seconds_left() // 60), int(MatchStats.get_match_seconds_left() % 60)
         HUD.time_label.update_text(f"{m}:{s:02}")
 
     def draw():
