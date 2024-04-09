@@ -62,6 +62,7 @@ class Game:
 
         BallManager.create_ball()
         MatchStats.start_match()
+        HUD.update_time_display()
 
         while True:
             

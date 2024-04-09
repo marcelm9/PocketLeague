@@ -14,6 +14,11 @@ class Updater:
 
     def update():
         dt = Updater.__fpsclock.tick(FPS)
+        dt_s = dt / 1000
+
+        if MatchStats.get_countdown() > 0:
+            MatchStats.reduce_countdown(dt_s)
+
         event_list = pygame.event.get()
         for event in event_list:
             if event.type == pygame.QUIT:
@@ -23,6 +28,11 @@ class Updater:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     exit()
+        
+        if MatchStats.get_countdown() > 0:
+            return
+        
+        MatchStats.reduce_match_time(dt_s)
 
         for player in Player.players:
             player.update()
@@ -42,11 +52,13 @@ class Updater:
             HUD.update_score()
             BallManager.reset_ball()
             Player.reset_all_player_positions()
+            MatchStats.start_countdown()
         elif ball_pos_x > FIELD_RIGHT_EDGE:
             # goal left team
             MatchStats.goal_team0()
             HUD.update_score()
             BallManager.reset_ball()
             Player.reset_all_player_positions()
+            MatchStats.start_countdown()
 
-        HUD.update_time(MATCH_DURATION_IN_SECONDS - (time.time() - MatchStats.get_start_time()))
+        HUD.update_time_display()

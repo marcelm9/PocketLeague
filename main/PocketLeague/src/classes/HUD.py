@@ -1,3 +1,4 @@
+import math
 import pygame
 import PygameXtras as px
 
@@ -167,13 +168,26 @@ class HUD:
             tc=HUD_GOAL_TC,
             f=HUD_GOAL_FONT
         )
+        HUD.countdown_label = px.Label(
+            screen,
+            "n/a",
+            HUD_GOAL_TEXTSIZE * 2,
+            (screen.get_width() // 2, screen.get_height() // 2),
+            tc=(255, 255, 255),
+            bgc=(0,0,0),
+            fd=(200, 200),
+            br=200,
+            bw=6,
+            bc=(255,255,255),
+            to=(0, 3)
+        )
 
     def update_score():
         HUD.team_0_goal_label.update_text(MatchStats.get_goals_team0())
         HUD.team_1_goal_label.update_text(MatchStats.get_goals_team1())
 
-    def update_time(seconds_left):
-        m, s = seconds_left // 60, seconds_left % 60
+    def update_time_display():
+        m, s = int(MatchStats.get_match_seconds_left() // 60), math.ceil(MatchStats.get_match_seconds_left() % 60)
         HUD.time_label.update_text(f"{m}:{s:02}")
 
     def draw():
@@ -183,3 +197,7 @@ class HUD:
         HUD.team_0_goal_label.draw()
         HUD.team_1_goal_label.draw()
         HUD.time_label.draw()
+
+        if MatchStats.get_countdown() > 0:
+            HUD.countdown_label.update_text(math.ceil(MatchStats.get_countdown()))
+            HUD.countdown_label.draw()
