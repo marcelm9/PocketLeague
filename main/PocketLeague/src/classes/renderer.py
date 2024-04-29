@@ -1,4 +1,6 @@
 import pygame
+
+from .boost_pads_manager import BoostPadsManager
 from .HUD import HUD
 from .field import Field
 from .ball_manager import BallManager
@@ -21,4 +23,5 @@ class Renderer:
         for player in Player.players:
             player.draw(Renderer.screen)
         
+        BoostPadsManager.draw(Renderer.screen)
         HUD.draw()

@@ -17,6 +17,12 @@ class HUD:
     team_1_goal_label: px.Label
     time_label: px.Label
 
+    # for now
+    player_0_boost_rect = pygame.Rect(0,0,200,40)
+    player_0_boost_rect.midtop = (500, 10)
+    player_1_boost_rect = pygame.Rect(0,0,200,40)
+    player_1_boost_rect.midtop = (WIN_WIDTH - 500, 10)
+
     def init(screen):
         assert len(Player.players) in (2, 4)
         HUD.screen = screen
@@ -190,6 +196,7 @@ class HUD:
         m, s = int(MatchStats.get_match_seconds_left() // 60), int(MatchStats.get_match_seconds_left() % 60)
         HUD.time_label.update_text(f"{m}:{s:02}")
 
+
     def draw():
         for label in HUD.labels:
             label.draw()
@@ -197,6 +204,14 @@ class HUD:
         HUD.team_0_goal_label.draw()
         HUD.team_1_goal_label.draw()
         HUD.time_label.draw()
+
+        # also updates boost display for now
+        fill_0 = Player.players[0].get_boost() / PLAYER_BOOST_SECONDS
+        pygame.draw.rect(HUD.screen, (50, 50, 50), HUD.player_0_boost_rect)
+        pygame.draw.rect(HUD.screen, (50, 200, 50), (HUD.player_0_boost_rect.left, HUD.player_0_boost_rect.top, HUD.player_0_boost_rect.width * fill_0, HUD.player_0_boost_rect.height))
+        fill_1 = Player.players[1].get_boost() / PLAYER_BOOST_SECONDS
+        pygame.draw.rect(HUD.screen, (50, 50, 50), HUD.player_1_boost_rect)
+        pygame.draw.rect(HUD.screen, (50, 200, 50), (HUD.player_1_boost_rect.left, HUD.player_1_boost_rect.top, HUD.player_1_boost_rect.width * fill_1, HUD.player_1_boost_rect.height))
 
         if MatchStats.get_countdown() > 0:
             HUD.countdown_label.update_text(math.ceil(MatchStats.get_countdown()))
