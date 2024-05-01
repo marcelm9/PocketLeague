@@ -32,7 +32,7 @@ class Player:
     @staticmethod
     def reset_boosts():
         for player in Player.players:
-            player.boost = PLAYER_BOOST_SECONDS
+            player.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
 
     def __init__(self):
         self.name = None
@@ -72,7 +72,6 @@ class Player:
         Player.players.append(self)
         Space.space.add(self.__body, self.__shape)
 
-    # FOR NOW
     def get_boost(self):
         return self.__boost
 

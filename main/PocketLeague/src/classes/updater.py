@@ -70,4 +70,4 @@ class Updater:
 
         BoostPadsManager.update()
 
-        HUD.update_time_display()
+        HUD.update()
