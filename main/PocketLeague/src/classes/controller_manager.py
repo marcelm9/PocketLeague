@@ -76,3 +76,31 @@ class ControllerManager:
             if c.arrow_right or c.circle:
                 buttons[4] = True
         return buttons
+
+    def get_controller_count():
+        return len(ControllerManager.controllers)
+
+    def get_pressed_by(controller_index: int, controller_input_side: str):
+        assert controller_index in [0, 1]
+        assert controller_input_side in ["left", "right"]
+
+        if controller_index >= ControllerManager.get_controller_count():
+            return [False for _ in range(5)]
+        c = ControllerManager.controllers[controller_index]
+        c.update()
+        if controller_input_side == "left":
+            return [
+                c.l1,
+                c.arrow_up,
+                c.arrow_down,
+                c.arrow_left,
+                c.arrow_right
+            ]
+        elif controller_input_side == "right":
+            return [
+                c.r1,
+                c.triangle,
+                c.cross,
+                c.square,
+                c.circle
+            ]

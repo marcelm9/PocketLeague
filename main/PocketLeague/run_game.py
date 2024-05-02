@@ -8,7 +8,7 @@ if os.name == "nt":
     import ctypes
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
-from src.menu import Menu
+from src.ui.menu import Menu
 Menu.start()
 
 # from src.game import Game
