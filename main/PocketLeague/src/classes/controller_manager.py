@@ -58,3 +58,21 @@ class ControllerManager:
             if c.cross or c.arrow_down:
                 return True
         return False
+    
+    def get_pressed_by_everyone():
+        # bools for the following values in the following order:
+        # [confirm, up, down, left, right]
+        buttons = [False for _ in range(5)]
+        for c in ControllerManager.controllers:
+            c.update()
+            if c.l1 or c.r1:
+                buttons[0] = True
+            if c.arrow_up or c.triangle:
+                buttons[1] = True
+            if c.arrow_down or c.cross:
+                buttons[2] = True
+            if c.arrow_left or c.square:
+                buttons[3] = True
+            if c.arrow_right or c.circle:
+                buttons[4] = True
+        return buttons
