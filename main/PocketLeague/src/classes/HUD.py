@@ -26,24 +26,32 @@ class HUD:
     player_1_boost_rect = pygame.Rect(0,0,200,40)
     player_1_boost_rect.midtop = (WIN_WIDTH - 500, 10)
 
-    def init(screen):
+    def init(screen: pygame.Surface):
         assert len(Player.players) in (2, 4)
         team_color = [
             TEAM0_COLOR,
             TEAM1_COLOR,
         ]
-        if len(Player.players) == 2:
+        HUD.screen = screen
+        positions = [
+            # label position, label anchor, boost_display offset
+            ((10, 10), "topleft", (225, 0)),
+            ((screen.get_width() - 10, 10), "topright", (-225, 0)),
+            ((10, screen.get_height() - 10), "bottomleft", (225, 0)),
+            ((screen.get_width() - 10, screen.get_height() - 10), "bottomright", (-225, 0)),
+        ]
+        for i in range(len(Player.players)):
             HUD.labels.append(
                 px.Label(
                     screen,
-                    Player.players[0].name,
+                    Player.players[i].name,
                     HUD_TEXT_SIZE,
-                    HUD_SIDE_DISTANCE,
-                    "topleft",
+                    positions[i][0],
+                    positions[i][1],
+                    bgc=Player.players[i].color,
+                    bc=team_color[Player.players[i].team],
                     f=HUD_FONT,
-                    bgc=Player.players[0].color,
                     fd=HUD_DIMENSIONS,
-                    bc=team_color[Player.players[0].team],
                     bw=HUD_BW,
                     br=HUD_BR,
                     to=HUD_TEXT_OFFSET,
@@ -51,99 +59,9 @@ class HUD:
             )
             HUD.boost_displays.append(
                 BoostDisplay((
-                    HUD.labels[0].midright[0] + 100,
-                    HUD.labels[0].center[1]
+                    HUD.labels[i].center[0] + positions[i][2][0],
+                    HUD.labels[i].center[1] + positions[i][2][1]
                 ))
-            )
-            HUD.labels.append(
-                px.Label(
-                    screen,
-                    Player.players[1].name,
-                    HUD_TEXT_SIZE,
-                    (WIN_WIDTH - HUD_SIDE_DISTANCE[0], HUD_SIDE_DISTANCE[1]),
-                    "topright",
-                    f=HUD_FONT,
-                    bgc=Player.players[1].color,
-                    fd=HUD_DIMENSIONS,
-                    bc=team_color[Player.players[1].team],
-                    bw=HUD_BW,
-                    br=HUD_BR,
-                    to=HUD_TEXT_OFFSET,
-                )
-            )
-            HUD.boost_displays.append(
-                BoostDisplay((
-                    HUD.labels[1].midleft[0] - 100,
-                    HUD.labels[1].center[1]
-                ))
-            )
-        if len(Player.players) == 4:
-            HUD.labels.append(
-                px.Label(
-                    screen,
-                    Player.players[0].name,
-                    HUD_TEXT_SIZE,
-                    HUD_SIDE_DISTANCE,
-                    "topleft",
-                    f=HUD_FONT,
-                    bgc=Player.players[0].color,
-                    fd=HUD_DIMENSIONS,
-                    bc=team_color[Player.players[0].team],
-                    bw=HUD_BW,
-                    br=HUD_BR,
-                    to=HUD_TEXT_OFFSET,
-                )
-            )
-            HUD.labels.append(
-                px.Label(
-                    screen,
-                    Player.players[1].name,
-                    HUD_TEXT_SIZE,
-                    (HUD_SIDE_DISTANCE[0], WIN_HEIGHT - HUD_SIDE_DISTANCE[1]),
-                    "bottomleft",
-                    f=HUD_FONT,
-                    bgc=Player.players[1].color,
-                    fd=HUD_DIMENSIONS,
-                    bc=team_color[Player.players[1].team],
-                    bw=HUD_BW,
-                    br=HUD_BR,
-                    to=HUD_TEXT_OFFSET,
-                )
-            )
-            HUD.labels.append(
-                px.Label(
-                    screen,
-                    Player.players[2].name,
-                    HUD_TEXT_SIZE,
-                    (WIN_WIDTH - HUD_SIDE_DISTANCE[0], HUD_SIDE_DISTANCE[1]),
-                    "topright",
-                    f=HUD_FONT,
-                    bgc=Player.players[2].color,
-                    fd=HUD_DIMENSIONS,
-                    bc=team_color[Player.players[2].team],
-                    bw=HUD_BW,
-                    br=HUD_BR,
-                    to=HUD_TEXT_OFFSET,
-                )
-            )
-            HUD.labels.append(
-                px.Label(
-                    screen,
-                    Player.players[3].name,
-                    HUD_TEXT_SIZE,
-                    (
-                        WIN_WIDTH - HUD_SIDE_DISTANCE[0],
-                        WIN_HEIGHT - HUD_SIDE_DISTANCE[1],
-                    ),
-                    "bottomright",
-                    f=HUD_FONT,
-                    bgc=Player.players[3].color,
-                    fd=HUD_DIMENSIONS,
-                    bc=team_color[Player.players[3].team],
-                    bw=HUD_BW,
-                    br=HUD_BR,
-                    to=HUD_TEXT_OFFSET,
-                )
             )
 
         HUD.goal_colon = px.Label(
