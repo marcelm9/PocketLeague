@@ -1,13 +1,15 @@
 import pygame
 
-from .files.config import WIN_WIDTH, WIN_HEIGHT
-from .classes.updater import Updater
-from .classes.renderer import Renderer
-from .classes.field import Field
 from .classes.ball_manager import BallManager
-from .classes.player import Player
+from .classes.boost_pads_manager import BoostPadsManager
+from .classes.field import Field
 from .classes.HUD import HUD
 from .classes.match_stats import MatchStats
+from .classes.player import Player
+from .classes.renderer import Renderer
+from .classes.updater import Updater
+from .files.config import WIN_HEIGHT, WIN_WIDTH
+
 
 class Game:
 
@@ -36,7 +38,7 @@ class Game:
         p1.set_controller_input(
             controller_index = 0,
             joystick = 0,
-            dash_button = 9
+            boost_button = 9
         )
         p1.set_pos((0,0))
         p1.set_name("Marcel")
@@ -47,7 +49,7 @@ class Game:
         p2.set_controller_input(
             controller_index = 0,
             joystick = 1,
-            dash_button = 10
+            boost_button = 10
         )
         p2.set_pos((0,0))
         p2.set_name("Pascal")
@@ -63,6 +65,7 @@ class Game:
         BallManager.create_ball()
         MatchStats.start_match()
         HUD.update_time_display()
+        BoostPadsManager.init()
 
         while True:
             

@@ -1,5 +1,6 @@
 import pygame
-import time
+
+from .boost_pads_manager import BoostPadsManager
 
 from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, MATCH_DURATION_IN_SECONDS
 from .ball_manager import BallManager
@@ -28,6 +29,8 @@ class Updater:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     exit()
+                elif event.key == pygame.K_r:
+                    BallManager.reset_ball()
         
         if MatchStats.get_countdown() > 0:
             return
@@ -35,7 +38,7 @@ class Updater:
         MatchStats.reduce_match_time(dt_s)
 
         for player in Player.players:
-            player.update()
+            player.update(dt_s)
 
         BallManager.get_ball().update()
 
@@ -53,6 +56,8 @@ class Updater:
             BallManager.reset_ball()
             Player.reset_all_player_positions()
             MatchStats.start_countdown()
+            Player.reset_boosts()
+            BoostPadsManager.reset_pads()
         elif ball_pos_x > FIELD_RIGHT_EDGE:
             # goal left team
             MatchStats.goal_team0()
@@ -60,5 +65,9 @@ class Updater:
             BallManager.reset_ball()
             Player.reset_all_player_positions()
             MatchStats.start_countdown()
+            Player.reset_boosts()
+            BoostPadsManager.reset_pads()
 
-        HUD.update_time_display()
+        BoostPadsManager.update()
+
+        HUD.update()

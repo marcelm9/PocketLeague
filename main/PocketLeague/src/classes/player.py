@@ -29,6 +29,11 @@ class Player:
                     (BALL_SPAWN[0] - random_pos[0], BALL_SPAWN[1] - random_pos[1])
                 )
 
+    @staticmethod
+    def reset_boosts():
+        for player in Player.players:
+            player.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
+
     def __init__(self):
         self.name = None
         self.team = None
@@ -38,7 +43,8 @@ class Player:
         self.__controller_index = None
         self.__controller: px.PlayStationController = None
         self.__joystick: int = None # 0 for left, 1 for right
-        self.__dash_button = None
+        self.__boost_button = None
+        self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
 
         # keyboard input
         self.__keys = [
@@ -46,12 +52,11 @@ class Player:
             pygame.K_s, # down
             pygame.K_a, # left
             pygame.K_d, # right
-            pygame.K_SPACE, # dash
+            pygame.K_SPACE, # boost
         ]
 
         # stats
         self.__radius = PLAYER_RADIUS
-        self.__speed = PLAYER_MAX_SPEED
         self.__current_speed = 0
         self.__current_direction = pygame.Vector2(0,0)
 
@@ -66,6 +71,9 @@ class Player:
 
         Player.players.append(self)
         Space.space.add(self.__body, self.__shape)
+
+    def get_boost(self):
+        return self.__boost
 
     def make_bot(self):
         self.__is_bot = True
@@ -89,19 +97,19 @@ class Player:
     def get_radius(self):
         return self.__radius
 
-    def set_keyboard_input(self, up, down, left, right, dash):
+    def set_keyboard_input(self, up, down, left, right, boost):
         self.__keys[0] = up
         self.__keys[1] = down
         self.__keys[2] = left
         self.__keys[3] = right
-        self.__keys[4] = dash
+        self.__keys[4] = boost
 
-    def set_controller_input(self, controller_index: int, joystick: int, dash_button: int):
+    def set_controller_input(self, controller_index: int, joystick: int, boost_button: int):
         assert joystick in [0, 1]
 
         self.__controller_index = controller_index
         self.__joystick = joystick
-        self.__dash_button = dash_button
+        self.__boost_button = boost_button
 
         self.__controller = px.PlayStationController(self.__controller_index)
 
@@ -132,31 +140,33 @@ class Player:
                 v.scale_to_length(1)
             return v
 
-    def get_input_for_dash(self) -> bool:
+    def get_input_for_boost(self) -> bool:
         if CONTROLLER_INPUT:
-            return self.__controller.get_pressed()[self.__dash_button]
+            return self.__controller.get_pressed()[self.__boost_button]
         else:
             keys = pygame.key.get_pressed()
-            return keys[self.__keys[4]] # dash
+            return keys[self.__keys[4]] # boost
 
-    def update(self):
+    def update(self, dt_s):
 
         if self.__is_bot:
-            balls = BallManager.get_balls()
-            if len(balls) == 0:
-                inp = pygame.Vector2(0, 0)
-            else:
-                inp = pygame.Vector2(
-                    balls[0].get_pos()[0] - self.get_pos()[0],
-                    balls[0].get_pos()[1] - self.get_pos()[1],
-                )
+            ball = BallManager.get_ball()
+            inp = pygame.Vector2(
+                ball[0].get_pos()[0] - self.get_pos()[0],
+                ball[0].get_pos()[1] - self.get_pos()[1],
+            )
 
         else:
             inp = self.get_input_for_direction()
 
         if inp.length() > 0:
+            if self.get_input_for_boost() and self.__boost > 0:
+                max_length = PLAYER_MAX_SPEED_WHEN_BOOSTING
+                self.__boost = max(0, self.__boost - dt_s)
+            else:
+                max_length = PLAYER_MAX_SPEED
             inp.scale_to_length(
-                min(self.__speed, inp.length() * self.__speed)
+                min(max_length, inp.length() * max_length)
             )
             self.__current_speed = inp.length()
             self.__current_direction = inp.normalize()
@@ -211,3 +221,9 @@ class Player:
 
     def get_direction(self):
         return self.__current_direction
+
+    def collides_with(self, circle_center, circle_radius) -> bool:
+        return ((self.get_pos()[0] - circle_center[0]) ** 2 + (self.get_pos()[1] - circle_center[1]) ** 2) <= (self.get_radius() + circle_radius) ** 2
+
+    def recharge_boost(self):
+        self.__boost = PLAYER_BOOST_SECONDS
