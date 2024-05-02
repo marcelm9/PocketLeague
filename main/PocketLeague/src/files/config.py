@@ -13,7 +13,8 @@ FIELD_LINE_SIZE = 9
 GOAL_SIZE = 200
 GOAL_DEPTH = 50
 
-PLAYER_RADIUS = 20
+PLAYER_OUTER_RADIUS = 20
+PLAYER_INNER_RADIUS = PLAYER_OUTER_RADIUS // 2
 PLAYER_MAX_SPEED = 0.5
 BALL_RADIUS = 12
 BALL_MAX_SPEED = 15
@@ -30,17 +31,41 @@ FIELD_RIGHT_EDGE = WIN_WIDTH // 2 + FIELD_WIDTH // 2 + BALL_RADIUS
 
 TEAM0_COLOR = (0, 0, 190)
 TEAM1_COLOR = (255, 128, 0)
-PLAYER_TEAM0_COLORS = [
-    (0, 0, 255),
-    (255, 0, 255),
-    (0, 255, 0),
-    (0, 128, 0),
+TEAM_COLOR_MAP = {
+    "Team Blue": (0, 0, 190),
+    "Team Orange": (255, 128, 0)
+}
+COLOR_MAP = {
+    "red": (255, 0, 0),
+    "yellow": (255, 255, 0),
+    "green": (0, 255, 0),
+    "cyan": (0, 255, 255),
+    "magenta": (255, 0, 255),
+    "chartreuse": (128, 255, 0),
+    "spring green": (0, 255, 128),
+    "azure": (0, 128, 255),
+    "violet": (128, 0, 255),
+    "rose": (255, 0, 128),
+}
+COLOR_NAMES = list(COLOR_MAP.keys())
+COLOR_VALUES = list(COLOR_MAP.items())
+NAMES = [
+    "Lena", 
+    "Nahee", 
+    "Pascal", 
+    "Marcel", 
+    "Leninator99", 
+    "Nachodip03", 
+    "BlackRice_", 
+    "Golfmensch99", 
+    "GoatRice"
 ]
-PLAYER_TEAM1_COLORS = [
-    (255, 0, 0),
-    (255, 255, 0),
-    (170, 0, 0),
-    (139, 69, 19),
+TEAM_NAMES = ["Team Blue", "Team Orange"]
+BOOST_TYPES = [
+    "regular"
+]
+GOAL_EXPLOSION_TYPES = [
+    "regular"
 ]
 
 HUD_BW = 10
@@ -93,4 +118,5 @@ PLAYER_SELECTION_PANEL_POSITIONS = (
     (WIN_WIDTH / 5 * 3, CENTER[1]),
     (WIN_WIDTH / 5 * 4, CENTER[1]),
 )
-PLAYER_SELECTION_PANEL_SIZE = (340, 800)
+PLAYER_SELECTION_PANEL_SIZE = (340, 850)
+PLAYER_SELECTION_PANEL_PREVIEW_OFFSET = (PLAYER_SELECTION_PANEL_SIZE[0] // 2, 60)

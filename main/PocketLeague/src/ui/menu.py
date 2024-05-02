@@ -171,20 +171,13 @@ class Menu:
             elif 1 <= current_index <= 3:
                 if keys[3]:
                     value_indexes[current_index - 1] = max(
-                        0,
-                        min(
-                            value_indexes_max[current_index - 1],
-                            value_indexes[current_index - 1] - 1,
-                        ),
+                        0, value_indexes[current_index - 1] - 1
                     )
                     update_value_labels()
                 elif keys[4]:
-                    value_indexes[current_index - 1] = max(
-                        0,
-                        min(
-                            value_indexes_max[current_index - 1],
-                            value_indexes[current_index - 1] + 1,
-                        ),
+                    value_indexes[current_index - 1] = min(
+                        value_indexes_max[current_index - 1],
+                        value_indexes[current_index - 1] + 1,
                     )
                     update_value_labels()
 
@@ -211,11 +204,12 @@ class Menu:
         # i want players to be able to join in sporadically
         # this also makes it easier for two players to play on seperate controllers
 
-        panels: list[PlayerSelectionPanel] = [None, None, None, None]
-        panels[0] = PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[0], 0, "left")
-        panels[1] = PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[1], 0, "right")
-        panels[2] = PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[2], 1, "left")
-        panels[3] = PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[3], 1, "right")
+        panels: list[PlayerSelectionPanel] = [
+            PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[0], 0, "left"),
+            PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[1], 0, "right"),
+            PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[2], 1, "left"),
+            PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[3], 1, "right"),
+        ]
 
         while True:
             event_list = pygame.event.get()

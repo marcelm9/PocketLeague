@@ -56,7 +56,7 @@ class Player:
         ]
 
         # stats
-        self.__radius = PLAYER_RADIUS
+        self.__radius = PLAYER_OUTER_RADIUS
         self.__current_speed = 0
         self.__current_direction = pygame.Vector2(0,0)
 
@@ -211,10 +211,10 @@ class Player:
 
     def draw(self, surface):
         if self.team == 0:
-            pygame.draw.circle(surface, TEAM0_COLOR, self.__body.position, self.__radius)
+            pygame.draw.circle(surface, TEAM0_COLOR, self.__body.position, PLAYER_OUTER_RADIUS)
         elif self.team == 1:
-            pygame.draw.circle(surface, TEAM1_COLOR, self.__body.position, self.__radius)
-        pygame.draw.circle(surface, self.color, self.__body.position, self.__radius * 0.5)
+            pygame.draw.circle(surface, TEAM1_COLOR, self.__body.position, PLAYER_OUTER_RADIUS)
+        pygame.draw.circle(surface, self.color, self.__body.position, PLAYER_INNER_RADIUS)
 
     def get_speed(self):
         return self.__current_speed
