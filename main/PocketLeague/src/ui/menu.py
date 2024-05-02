@@ -31,14 +31,24 @@ class Menu:
             tc=(240, 240, 240),
         )
 
-        start_hint = px.Label(
+        start_label = px.Label(
             Menu.screen,
-            "Press X to start",
+            "Press CROSS or DOWN to start a game",
             50,
             px.C(CENTER) + px.C(0, 50),
             "midtop",
             f="Comic Sans",
-            tc=(240, 240, 240),
+            tc=SOFT_WHITE,
+        )
+
+        garage_label = px.Label(
+            Menu.screen,
+            "Press TRIANGLE or UP to visit the garage",
+            50,
+            px.C(CENTER) + px.C(0, 150),
+            "midtop",
+            f="Comic Sans",
+            tc=SOFT_WHITE,
         )
 
         run = True
@@ -53,15 +63,19 @@ class Menu:
                         pygame.quit()
                         exit()
 
-            if ControllerManager.someone_pressed_x_or_down():
+            keys = ControllerManager.get_pressed_by_everyone()
+            if keys[2]:
                 Menu.match_config()
+            if keys[1]:
+                Menu.player_config()
 
             # debug
-            Menu.match_config()
+            # Menu.match_config()
 
             Menu.screen.fill(DARK_BLUE)
             title.draw()
-            start_hint.draw()
+            start_label.draw()
+            garage_label.draw()
 
             pygame.display.flip()
             Menu.fpsclock.tick(FPS)
@@ -163,7 +177,8 @@ class Menu:
             if current_index == 0 and keys[0]:
                 return
             elif current_index == 4 and keys[0]:
-                Menu.player_config()
+                # TODO: start game
+                pass
             elif keys[1]:
                 current_index = max(0, min(4, current_index - 1))
             elif keys[2]:
@@ -187,9 +202,6 @@ class Menu:
                 else:
                     label.update_borderwidth(0)
 
-            # debug
-            Menu.player_config()
-
             Menu.screen.fill(DARK_BLUE)
             for label in labels + value_labels:
                 label.draw()
@@ -211,6 +223,16 @@ class Menu:
             PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[3], 1, "right"),
         ]
 
+        save_label = px.Label(
+            Menu.screen,
+            "Press PS button to save",
+            40,
+            (CENTER[0], Menu.screen.get_height() - 50),
+            "midbottom",
+            tc=SOFT_WHITE,
+            f="Comic Sans"
+        )
+
         while True:
             event_list = pygame.event.get()
             for event in event_list:
@@ -230,6 +252,7 @@ class Menu:
             Menu.screen.fill(DARK_BLUE)
             for p in panels:
                 p.draw(Menu.screen)
+            save_label.draw()
 
             pygame.display.flip()
             Menu.fpsclock.tick(10)

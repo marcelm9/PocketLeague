@@ -50,14 +50,6 @@ class ControllerManager:
             ControllerManager.controllers.append(
                 px.PlayStationController(i)
             )
-
-    def someone_pressed_x_or_down():
-        ControllerManager.enough_controllers()
-        for c in ControllerManager.controllers:
-            c.update()
-            if c.cross or c.arrow_down:
-                return True
-        return False
     
     def get_pressed_by_everyone():
         # bools for the following values in the following order:
