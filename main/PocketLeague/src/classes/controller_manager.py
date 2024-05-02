@@ -61,8 +61,8 @@ class ControllerManager:
     
     def get_pressed_by_everyone():
         # bools for the following values in the following order:
-        # [confirm, up, down, left, right]
-        buttons = [False for _ in range(5)]
+        # [confirm, up, down, left, right, cancel]
+        buttons = [False for _ in range(6)]
         for c in ControllerManager.controllers:
             c.update()
             if c.l1 or c.r1:
@@ -75,6 +75,8 @@ class ControllerManager:
                 buttons[3] = True
             if c.arrow_right or c.circle:
                 buttons[4] = True
+            if c.share or c.options:
+                buttons[5] = True
         return buttons
 
     def get_controller_count():
@@ -85,7 +87,7 @@ class ControllerManager:
         assert controller_input_side in ["left", "right"]
 
         if controller_index >= ControllerManager.get_controller_count():
-            return [False for _ in range(5)]
+            return [False for _ in range(6)]
         c = ControllerManager.controllers[controller_index]
         c.update()
         if controller_input_side == "left":
@@ -94,7 +96,8 @@ class ControllerManager:
                 c.arrow_up,
                 c.arrow_down,
                 c.arrow_left,
-                c.arrow_right
+                c.arrow_right,
+                c.share
             ]
         elif controller_input_side == "right":
             return [
@@ -102,5 +105,6 @@ class ControllerManager:
                 c.triangle,
                 c.cross,
                 c.square,
-                c.circle
+                c.circle,
+                c.options
             ]

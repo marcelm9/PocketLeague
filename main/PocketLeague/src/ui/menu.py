@@ -223,7 +223,9 @@ class Menu:
                         exit()
 
             for p in panels:
-                p.update()
+                if p.update() == False:
+                    # adds possibility to return to previous screen
+                    return
 
             Menu.screen.fill(DARK_BLUE)
             for p in panels:
