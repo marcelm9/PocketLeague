@@ -100,3 +100,8 @@ class ControllerManager:
                 c.circle,
                 c.options
             ]
+        
+    def has_anyone_pressed_ps_button():
+        for c in ControllerManager.controllers:
+            c.update()
+        return any([c.ps for c in ControllerManager.controllers])

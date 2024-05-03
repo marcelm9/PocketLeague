@@ -1,6 +1,8 @@
 import pygame
 import PygameXtras as px
 
+from ..classes.player_config_manager import PlayerConfigManager
+
 from .player_selection_panel import PlayerSelectionPanel
 
 from ..files.config import *
@@ -24,7 +26,7 @@ class Menu:
         title = px.Label(
             Menu.screen,
             "Pocket League",
-            150,
+            190,
             CENTER,
             "midbottom",
             f="Comic Sans",
@@ -245,9 +247,15 @@ class Menu:
                         exit()
 
             for p in panels:
-                if p.update() == False:
-                    # adds possibility to return to previous screen
-                    return
+                p.update()
+            
+            if ControllerManager.has_anyone_pressed_ps_button():
+                PlayerConfigManager.clear_players()
+                active_panels = [p for p in panels if p.is_active()]
+                for p in active_panels:
+                    PlayerConfigManager.add_player(p.get_player_config())
+                print(PlayerConfigManager.get_player_configs())
+                return
 
             Menu.screen.fill(DARK_BLUE)
             for p in panels:
