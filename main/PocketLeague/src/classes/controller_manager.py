@@ -8,6 +8,7 @@ class ControllerManager:
     screen: pygame.Surface
     fpsclock: pygame.time.Clock
     controllers: list[px.PlayStationController] = []
+    __joystick_count: int = 0
     
     def init(screen: pygame.Surface, fpsclock: pygame.time.Clock):
         ControllerManager.screen = screen
@@ -46,10 +47,16 @@ class ControllerManager:
 
     def declare_controllers():
         ControllerManager.controllers.clear()
-        for i in range(CONTROLLERS_NEEDED):
+        ControllerManager.__joystick_count = 0
+        for i in range(pygame.joystick.get_count()):
             ControllerManager.controllers.append(
                 px.PlayStationController(i)
             )
+            ControllerManager.__joystick_count += 1
+
+    def update():
+        if pygame.joystick.get_count() != ControllerManager.__joystick_count:
+            ControllerManager.declare_controllers()
     
     def get_pressed_by_everyone():
         # bools for the following values in the following order:

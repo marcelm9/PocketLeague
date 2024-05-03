@@ -1,14 +1,12 @@
 import pygame
 import PygameXtras as px
 
-from ..classes.player_config_manager import PlayerConfigManager
-
-from .player_selection_panel import PlayerSelectionPanel
-
-from ..files.config import *
-from ..files.colors import DARK_BLUE, SOFT_WHITE
 from ..classes.controller_manager import ControllerManager
+from ..classes.player_config_manager import PlayerConfigManager
+from ..files.colors import DARK_BLUE, SOFT_WHITE
+from ..files.config import *
 from ..game import Game
+from .player_selection_panel import PlayerSelectionPanel
 
 
 class Menu:
@@ -35,7 +33,7 @@ class Menu:
 
         start_label = px.Label(
             Menu.screen,
-            "Press CROSS or DOWN to start a game",
+            "Press LEFT or SQUARE to start a game",
             50,
             px.C(CENTER) + px.C(0, 50),
             "midtop",
@@ -64,15 +62,14 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
+                    elif event.key == pygame.K_SPACE:
+                        PlayerConfigManager._use_debug_configs()
 
             keys = ControllerManager.get_pressed_by_everyone()
-            if keys[2]:
+            if keys[3]:
                 Menu.match_config()
             if keys[1]:
                 Menu.player_config()
-
-            # debug
-            # Menu.match_config()
 
             Menu.screen.fill(DARK_BLUE)
             title.draw()
@@ -80,7 +77,7 @@ class Menu:
             garage_label.draw()
 
             pygame.display.flip()
-            Menu.fpsclock.tick(FPS)
+            Menu.fpsclock.tick(60)
 
     def match_config():
         labels = []
@@ -160,7 +157,7 @@ class Menu:
         )
 
         # different index than in lines above !
-        current_index = 0
+        current_index = 1
 
         while True:
             event_list = pygame.event.get()
@@ -170,8 +167,6 @@ class Menu:
                     exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        # return
-                        # debug
                         pygame.quit()
                         exit()
 
@@ -224,6 +219,11 @@ class Menu:
             PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[2], 1, "left"),
             PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[3], 1, "right"),
         ]
+        
+        panels[0].set_from_player_config(PlayerConfigManager.get_by_controller(0, "left"))
+        panels[1].set_from_player_config(PlayerConfigManager.get_by_controller(0, "right"))
+        panels[2].set_from_player_config(PlayerConfigManager.get_by_controller(1, "left"))
+        panels[3].set_from_player_config(PlayerConfigManager.get_by_controller(1, "right"))
 
         save_label = px.Label(
             Menu.screen,
@@ -245,7 +245,8 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-
+ 
+            ControllerManager.update()
             for p in panels:
                 p.update()
             
@@ -254,7 +255,6 @@ class Menu:
                 active_panels = [p for p in panels if p.is_active()]
                 for p in active_panels:
                     PlayerConfigManager.add_player(p.get_player_config())
-                print(PlayerConfigManager.get_player_configs())
                 return
 
             Menu.screen.fill(DARK_BLUE)
