@@ -26,6 +26,7 @@ class Game:
         Game.init(
             pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags = pygame.FULLSCREEN | pygame.SCALED)
         )
+        PlayerConfigManager._use_debug_configs()
         Game.start()
 
     def __configure():

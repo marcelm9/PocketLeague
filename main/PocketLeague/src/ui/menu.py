@@ -1,6 +1,8 @@
 import pygame
 import PygameXtras as px
 
+from ..classes.ps_button_drawer.ps_button_drawer import PSButtonDrawer
+
 from ..classes.controller_manager import ControllerManager
 from ..classes.player_config_manager import PlayerConfigManager
 from ..files.colors import DARK_BLUE, SOFT_WHITE
@@ -33,7 +35,7 @@ class Menu:
 
         start_label = px.Label(
             Menu.screen,
-            "Press LEFT or SQUARE to start a game",
+            "Start a match",
             50,
             px.C(CENTER) + px.C(0, 50),
             "midtop",
@@ -43,7 +45,7 @@ class Menu:
 
         garage_label = px.Label(
             Menu.screen,
-            "Press TRIANGLE or UP to visit the garage",
+            "Visit the garage",
             50,
             px.C(CENTER) + px.C(0, 150),
             "midtop",
@@ -75,6 +77,12 @@ class Menu:
             title.draw()
             start_label.draw()
             garage_label.draw()
+            PSButtonDrawer.left(Menu.screen, (start_label.left - 200, start_label.center[1]))
+            PSButtonDrawer.slash(Menu.screen, (start_label.left - 130, start_label.center[1]))
+            PSButtonDrawer.square(Menu.screen, (start_label.left - 60, start_label.center[1]))
+            PSButtonDrawer.triangle(Menu.screen, (garage_label.left - 200, garage_label.center[1]))
+            PSButtonDrawer.slash(Menu.screen, (garage_label.left - 130, garage_label.center[1]))
+            PSButtonDrawer.up(Menu.screen, (garage_label.left - 60, garage_label.center[1]))
 
             pygame.display.flip()
             Menu.fpsclock.tick(60)

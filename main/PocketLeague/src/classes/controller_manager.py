@@ -20,7 +20,7 @@ class ControllerManager:
         """
         if pygame.joystick.get_count() < CONTROLLERS_NEEDED:
 
-            label1 = px.Label(ControllerManager.screen, f"Please connect {CONTROLLERS_NEEDED} controllers", 50, CENTER, "midbottom", f="Comic Sans", tc=SOFT_WHITE)
+            label1 = px.Label(ControllerManager.screen, f"Please connect {CONTROLLERS_NEEDED} controller(s)", 50, CENTER, "midbottom", f="Comic Sans", tc=SOFT_WHITE)
             label2 = px.Label(ControllerManager.screen, f"Currently connected: {pygame.joystick.get_count()}", 50, CENTER, "midtop", f="Comic Sans", tc=SOFT_WHITE)
 
             run = True
