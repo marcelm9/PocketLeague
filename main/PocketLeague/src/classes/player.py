@@ -13,7 +13,7 @@ from .space import Space
 
 class Player:
 
-    players = []
+    players = [] # TODO: do not store players here but in a seperate class
 
     @staticmethod
     def reset_all_player_positions():
@@ -74,6 +74,12 @@ class Player:
 
     def get_boost(self):
         return self.__boost
+
+    def set_boost_type(self, boost_type: str):
+        pass
+
+    def set_goal_explosion(self, goal_explosion: str):
+        pass
 
     def make_bot(self):
         self.__is_bot = True

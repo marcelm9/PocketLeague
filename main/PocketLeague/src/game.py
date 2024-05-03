@@ -1,5 +1,7 @@
 import pygame
 
+from .classes.player_config_manager import PlayerConfigManager
+
 from .classes.ball_manager import BallManager
 from .classes.boost_pads_manager import BoostPadsManager
 from .classes.field import Field
@@ -8,60 +10,56 @@ from .classes.match_stats import MatchStats
 from .classes.player import Player
 from .classes.renderer import Renderer
 from .classes.updater import Updater
-from .files.config import WIN_HEIGHT, WIN_WIDTH
+from .files.config import *
 
 
 class Game:
 
-    screen: pygame.Surface
-    fpsclock: pygame.time.Clock
+    screen: pygame.Surface = None
+    fpsclock: pygame.time.Clock = None
 
-    def init(screen: pygame.Surface, fpsclock: pygame.time.Clock):
+    def init(screen: pygame.Surface):
         Game.screen = screen
-        Game.fpsclock = fpsclock
-        Renderer.init(screen)
+        Game.fpsclock = pygame.time.Clock()
 
     def debug():
         Game.init(
-            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags = pygame.FULLSCREEN | pygame.SCALED),
-            pygame.time.Clock()
+            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags = pygame.FULLSCREEN | pygame.SCALED)
         )
         Game.start()
 
-    def set_config():
-        pass
+    def __configure():
+        if len(PlayerConfigManager.get_player_configs()) < 2:
+            print(f"At least two players have to be registered (currently {len(PlayerConfigManager.get_player_configs())})")
+            return False
+
+        for cfg in PlayerConfigManager.get_player_configs():
+            p = Player()
+            p.set_name(cfg.name)
+            p.set_team({"Team Blue": 0, "Team Orange": 1}[cfg.team])
+            p.set_color(COLOR_MAP[cfg.color])
+            p.set_boost_type(cfg.boost)
+            p.set_goal_explosion(cfg.goal_explosion)
+            p.set_controller_input(
+                cfg.controller_id,
+                *({"left": (0, 9), "right": (1, 10)}[cfg.controller_side])
+            )
+
+        Field.init()
 
     def start():
+        if Game.__configure() == False:
+            # TODO: improve handling
+            return
         
-        Field.init()
-        p1 = Player()
-        p1.set_controller_input(
-            controller_index = 0,
-            joystick = 0,
-            boost_button = 9
-        )
-        p1.set_pos((0,0))
-        p1.set_name("Marcel")
-        p1.set_team(0)
-        p1.set_color((255,0,0))
-
-        p2 = Player()
-        p2.set_controller_input(
-            controller_index = 0,
-            joystick = 1,
-            boost_button = 10
-        )
-        p2.set_pos((0,0))
-        p2.set_name("Pascal")
-        p2.set_team(1)
-        p2.set_color((0,255,0))
+        if Game.screen is None:
+            Game.init(
+                pygame.display.get_surface()
+            )
 
         Player.reset_all_player_positions()
-
-
-
         HUD.init(Game.screen)
-
+        Renderer.init(Game.screen)
         BallManager.create_ball()
         MatchStats.start_match()
         HUD.update_time_display()

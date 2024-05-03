@@ -175,7 +175,7 @@ class Menu:
                 return
             elif current_index == 4 and keys[0]:
                 # TODO: start game
-                pass
+                Game.start()
             elif keys[1]:
                 current_index = max(0, min(4, current_index - 1))
             elif keys[2]:
