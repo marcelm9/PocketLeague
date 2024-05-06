@@ -80,9 +80,9 @@ class Menu:
             PSButtonDrawer.left(Menu.screen, (start_label.left - 200, start_label.center[1]))
             PSButtonDrawer.slash(Menu.screen, (start_label.left - 130, start_label.center[1]))
             PSButtonDrawer.square(Menu.screen, (start_label.left - 60, start_label.center[1]))
-            PSButtonDrawer.triangle(Menu.screen, (garage_label.left - 200, garage_label.center[1]))
+            PSButtonDrawer.up(Menu.screen, (garage_label.left - 200, garage_label.center[1]))
             PSButtonDrawer.slash(Menu.screen, (garage_label.left - 130, garage_label.center[1]))
-            PSButtonDrawer.up(Menu.screen, (garage_label.left - 60, garage_label.center[1]))
+            PSButtonDrawer.triangle(Menu.screen, (garage_label.left - 60, garage_label.center[1]))
 
             pygame.display.flip()
             Menu.fpsclock.tick(60)
