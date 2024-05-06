@@ -13,7 +13,7 @@ from .space import Space
 
 class Player:
 
-    players = []
+    players = [] # TODO: do not store players here but in a seperate class
 
     @staticmethod
     def reset_all_player_positions():
@@ -56,7 +56,7 @@ class Player:
         ]
 
         # stats
-        self.__radius = PLAYER_RADIUS
+        self.__radius = PLAYER_OUTER_RADIUS
         self.__current_speed = 0
         self.__current_direction = pygame.Vector2(0,0)
 
@@ -74,6 +74,12 @@ class Player:
 
     def get_boost(self):
         return self.__boost
+
+    def set_boost_type(self, boost_type: str):
+        pass
+
+    def set_goal_explosion(self, goal_explosion: str):
+        pass
 
     def make_bot(self):
         self.__is_bot = True
@@ -211,10 +217,10 @@ class Player:
 
     def draw(self, surface):
         if self.team == 0:
-            pygame.draw.circle(surface, TEAM0_COLOR, self.__body.position, self.__radius)
+            pygame.draw.circle(surface, TEAM0_COLOR, self.__body.position, PLAYER_OUTER_RADIUS)
         elif self.team == 1:
-            pygame.draw.circle(surface, TEAM1_COLOR, self.__body.position, self.__radius)
-        pygame.draw.circle(surface, self.color, self.__body.position, self.__radius * 0.5)
+            pygame.draw.circle(surface, TEAM1_COLOR, self.__body.position, PLAYER_OUTER_RADIUS)
+        pygame.draw.circle(surface, self.color, self.__body.position, PLAYER_INNER_RADIUS)
 
     def get_speed(self):
         return self.__current_speed
