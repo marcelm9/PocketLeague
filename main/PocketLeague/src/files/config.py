@@ -87,10 +87,7 @@ HUD_TIME_MIDBOTTOM_POS = (WIN_WIDTH // 2, WIN_HEIGHT - 9)
 BALL_SPEED_REDUCTION_FACTOR = 0.99
 
 # vectors from center, for left side of field (right side is mirrored)
-PLAYER_SPAWNS_2_PLAYERS = ((-500, -200), (-600, 0), (-500, 200))
-PLAYER_SPAWNS_4_PLAYERS = (
-    # TODO
-)
+PLAYER_SPAWNS = ((-500, -200), (-600, 0), (-500, 200))
 
 MATCH_DURATION_IN_SECONDS = 120
 MATCH_COUNTDOWN = 5  # reduce in the future

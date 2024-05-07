@@ -1,5 +1,7 @@
 import pygame
 
+from .classes.player_manager import PlayerManager
+
 from .classes.player_config_manager import PlayerConfigManager
 
 from .classes.ball_manager import BallManager
@@ -35,6 +37,9 @@ class Game:
             return False
 
         for cfg in PlayerConfigManager.get_player_configs():
+            PlayerManager.summon_player(
+                # TODO
+            )
             p = Player()
             p.set_name(cfg.name)
             p.set_team({"Team Blue": 0, "Team Orange": 1}[cfg.team])

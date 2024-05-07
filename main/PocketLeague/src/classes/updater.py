@@ -1,5 +1,7 @@
 import pygame
 
+from .player_manager import PlayerManager
+
 from .boost_pads_manager import BoostPadsManager
 
 from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, MATCH_DURATION_IN_SECONDS
@@ -37,35 +39,27 @@ class Updater:
         
         MatchStats.reduce_match_time(dt_s)
 
-        for player in Player.players:
-            player.update(dt_s)
+        PlayerManager.update(dt_s)
 
         BallManager.get_ball().update()
 
         Space.space.step(dt)
 
-        for player in Player.players:
-            player.keep_in_bounds()
+        PlayerManager.keep_in_bounds()
 
         # goals
         ball_pos_x = BallManager.get_ball().get_pos()[0]
-        if ball_pos_x < FIELD_LEFT_EDGE:
-            # goal right team
-            MatchStats.goal_team1()
+        if ball_pos_x < FIELD_LEFT_EDGE or ball_pos_x > FIELD_RIGHT_EDGE:
+            if ball_pos_x < FIELD_LEFT_EDGE:
+                # goal right team
+                MatchStats.goal_team1()
+            elif ball_pos_x > FIELD_RIGHT_EDGE:
+                # goal left team
+                MatchStats.goal_team0()
             HUD.update_score()
             BallManager.reset_ball()
-            Player.reset_all_player_positions()
+            PlayerManager.respawn_players()
             MatchStats.start_countdown()
-            Player.reset_boosts()
-            BoostPadsManager.reset_pads()
-        elif ball_pos_x > FIELD_RIGHT_EDGE:
-            # goal left team
-            MatchStats.goal_team0()
-            HUD.update_score()
-            BallManager.reset_ball()
-            Player.reset_all_player_positions()
-            MatchStats.start_countdown()
-            Player.reset_boosts()
             BoostPadsManager.reset_pads()
 
         BoostPadsManager.update()
