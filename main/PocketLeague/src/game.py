@@ -59,6 +59,7 @@ class Game:
                 pygame.display.get_surface()
             )
 
+        Updater.init(Game.fpsclock)
         PlayerManager.respawn_players()
         HUD.init(Game.screen)
         Renderer.init(Game.screen)
@@ -73,4 +74,4 @@ class Game:
             Renderer.render()
             
             pygame.display.flip()
-            pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")
+            # pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")

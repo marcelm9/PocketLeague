@@ -4,7 +4,7 @@ from .player_manager import PlayerManager
 
 from .boost_pads_manager import BoostPadsManager
 
-from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, MATCH_DURATION_IN_SECONDS
+from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE
 from .ball_manager import BallManager
 from .player import Player
 from .space import Space
@@ -13,7 +13,11 @@ from .HUD import HUD
 
 class Updater:
 
-    __fpsclock = pygame.time.Clock()
+    __fpsclock: pygame.time.Clock
+
+    def init(fpsclock: pygame.time.Clock):
+        # needs to be passed in from Game, otherwise the first iteration of .tick is very large
+        Updater.__fpsclock = fpsclock
 
     def update():
         dt = Updater.__fpsclock.tick(FPS)
