@@ -2,9 +2,10 @@ import time
 
 import pygame
 
+from .player_manager import PlayerManager
+
 from ..files.colors import BOOST_PAD_COLOR_ACTIVE, BOOST_PAD_COLOR_INACTIVE
 from ..files.config import BOOST_PAD_RADIUS, BOOST_PAD_RECHARGE_TIME
-from .player import Player
 
 
 class BoostPad:
@@ -19,7 +20,7 @@ class BoostPad:
             self.__collectable = True
         
         if self.__collectable:
-            for player in Player.players:
+            for player in PlayerManager.get_players():
                 if player.collides_with(self.__center, BOOST_PAD_RADIUS):
                     player.recharge_boost()
                     self.__last_time_collected = time.time()

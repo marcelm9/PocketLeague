@@ -1,5 +1,3 @@
-import random
-
 import pygame
 import PygameXtras as px
 import pymunk
@@ -14,9 +12,7 @@ from .space import Space
 class Player:
 
     def __init__(self):
-        self.name = None
-        self.team = None
-        self.color = None
+        self.__name = None
 
         # controller input
         self.__controller_index = None
@@ -24,10 +20,6 @@ class Player:
         self.__joystick: int = None # 0 for left, 1 for right
         self.__boost_button = None
         self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
-
-        # keyboard input
-        # up down left right boost
-        self.__keys = [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE]
 
         # stats
         self.__radius = PLAYER_OUTER_RADIUS
@@ -51,55 +43,36 @@ class Player:
         ) ** 2 <= (self.get_radius() + circle_radius) ** 2
 
     def draw(self, surface):
-        if self.team == 0:
-            pygame.draw.circle(
-                surface, TEAM0_COLOR, self.__body.position, PLAYER_OUTER_RADIUS
-            )
-        elif self.team == 1:
-            pygame.draw.circle(
-                surface, TEAM1_COLOR, self.__body.position, PLAYER_OUTER_RADIUS
-            )
         pygame.draw.circle(
-            surface, self.color, self.__body.position, PLAYER_INNER_RADIUS
+            surface, self.__team_color, self.__body.position, PLAYER_OUTER_RADIUS
+        )
+        pygame.draw.circle(
+            surface, self.__color, self.__body.position, PLAYER_INNER_RADIUS
         )
 
     def get_boost(self):
         return self.__boost
 
+    def get_color(self):
+        return self.__color
+
     def get_direction(self):
         return self.__current_direction
 
     def get_input_for_boost(self) -> bool:
-        if CONTROLLER_INPUT:
-            return self.__controller.get_pressed()[self.__boost_button]
-        else:
-            keys = pygame.key.get_pressed()
-            return keys[self.__keys[4]]  # boost
+        return self.__controller.get_pressed()[self.__boost_button]
 
     def get_input_for_direction(self) -> pygame.Vector2:
         """
         Returns a vector pointing into the desired movement direction (SCALED to be between 0 (min) to 1 (max))
         """
-        if CONTROLLER_INPUT:
-            assert self.__controller is not None
-            if self.__joystick == 0:
-                return pygame.Vector2(self.__controller.get_left_stick())
-            elif self.__joystick == 1:
-                return pygame.Vector2(self.__controller.get_right_stick())
-        else:
-            keys = pygame.key.get_pressed()
-            v = pygame.Vector2(0, 0)
-            if keys[self.__keys[0]]:  # up
-                v[1] -= 1
-            if keys[self.__keys[1]]:  # down
-                v[1] += 1
-            if keys[self.__keys[2]]:  # left
-                v[0] -= 1
-            if keys[self.__keys[3]]:  # right
-                v[0] += 1
-            if v.length() > 0:
-                v.scale_to_length(1)
-            return v
+        if self.__joystick == 0:
+            return pygame.Vector2(self.__controller.get_left_stick())
+        elif self.__joystick == 1:
+            return pygame.Vector2(self.__controller.get_right_stick())
+
+    def get_name(self):
+        return self.__name
 
     def get_pos(self):
         return self.__body.position
@@ -109,6 +82,9 @@ class Player:
 
     def get_speed(self):
         return self.__current_speed
+
+    def get_team(self):
+        return self.__team
 
     def keep_in_bounds(self):
         for line in Field.get_lines():
@@ -133,11 +109,14 @@ class Player:
     def recharge_boost(self):
         self.__boost = PLAYER_BOOST_SECONDS
 
+    def reset_boost(self):
+        self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
+
     def set_boost_type(self, boost_type: str):
         pass
 
     def set_color(self, color):
-        self.color = color
+        self.__color = COLOR_MAP[color]
 
     def set_controller_input(
         self, controller_index: int, joystick: int, boost_button: int
@@ -151,22 +130,16 @@ class Player:
     def set_goal_explosion(self, goal_explosion: str):
         pass
 
-    def set_keyboard_input(self, up, down, left, right, boost):
-        self.__keys[0] = up
-        self.__keys[1] = down
-        self.__keys[2] = left
-        self.__keys[3] = right
-        self.__keys[4] = boost
-
     def set_name(self, name):
-        self.name = name
+        self.__name = name
 
     def set_pos(self, pos):
         self.__body.position = pos
 
-    def set_team(self, team):
-        self.team = team
-        assert team in [0, 1]
+    def set_team(self, team: str):
+        assert team in ("Team Blue", "Team Orange")
+        self.__team = team
+        self.__team_color = TEAM_COLOR_MAP[team]
 
     def update(self, dt_s, all_players: list):
         if self.__is_bot:

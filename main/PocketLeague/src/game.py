@@ -38,17 +38,13 @@ class Game:
 
         for cfg in PlayerConfigManager.get_player_configs():
             PlayerManager.summon_player(
-                # TODO
-            )
-            p = Player()
-            p.set_name(cfg.name)
-            p.set_team({"Team Blue": 0, "Team Orange": 1}[cfg.team])
-            p.set_color(COLOR_MAP[cfg.color])
-            p.set_boost_type(cfg.boost)
-            p.set_goal_explosion(cfg.goal_explosion)
-            p.set_controller_input(
+                cfg.name,
+                cfg.team,
+                cfg.color,
+                cfg.boost_type,
+                cfg.goal_explosion,
                 cfg.controller_id,
-                *({"left": (0, 9), "right": (1, 10)}[cfg.controller_side])
+                cfg.controller_side
             )
 
         Field.init()
@@ -63,7 +59,7 @@ class Game:
                 pygame.display.get_surface()
             )
 
-        Player.reset_all_player_positions()
+        PlayerManager.respawn_players()
         HUD.init(Game.screen)
         Renderer.init(Game.screen)
         BallManager.create_ball()

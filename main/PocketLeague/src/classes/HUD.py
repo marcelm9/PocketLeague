@@ -3,10 +3,11 @@ import math
 import pygame
 import PygameXtras as px
 
+from .player_manager import PlayerManager
+
 from ..files.config import *
 from .boost_display import BoostDisplay
 from .match_stats import MatchStats
-from .player import Player
 
 
 class HUD:
@@ -27,11 +28,6 @@ class HUD:
     player_1_boost_rect.midtop = (WIN_WIDTH - 500, 10)
 
     def init(screen: pygame.Surface):
-        assert len(Player.players) in (2, 4)
-        team_color = [
-            TEAM0_COLOR,
-            TEAM1_COLOR,
-        ]
         HUD.screen = screen
         positions = [
             # label position, label anchor, boost_display offset
@@ -40,16 +36,16 @@ class HUD:
             ((10, screen.get_height() - 10), "bottomleft", (225, 0)),
             ((screen.get_width() - 10, screen.get_height() - 10), "bottomright", (-225, 0)),
         ]
-        for i in range(len(Player.players)):
+        for i, player in enumerate(PlayerManager.get_players()):
             HUD.labels.append(
                 px.Label(
                     screen,
-                    Player.players[i].name,
+                    player.get_name(),
                     HUD_TEXT_SIZE,
                     positions[i][0],
                     positions[i][1],
-                    bgc=Player.players[i].color,
-                    bc=team_color[Player.players[i].team],
+                    bgc=player.get_color(),
+                    bc=TEAM_COLOR_MAP[player.get_team()],
                     f=HUD_FONT,
                     fd=HUD_DIMENSIONS,
                     bw=HUD_BW,
@@ -147,6 +143,6 @@ class HUD:
             HUD.countdown_label.draw()
 
     def update_boosts():
-        for i in range(len(Player.players)):
-            HUD.boost_displays[i].update(Player.players[i].get_boost())
+        for i, player in enumerate(PlayerManager.get_players()):
+            HUD.boost_displays[i].update(player.get_boost())
 
