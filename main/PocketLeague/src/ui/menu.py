@@ -1,7 +1,6 @@
 import pygame
 import PygameXtras as px
-
-from ..classes.ps_button_drawer.ps_button_drawer import PSButtonDrawer
+from PygameXtras import PSVG
 
 from ..classes.controller_manager import ControllerManager
 from ..classes.player_config_manager import PlayerConfigManager
@@ -9,6 +8,9 @@ from ..files.colors import DARK_BLUE, SOFT_WHITE
 from ..files.config import *
 from ..game import Game
 from .player_selection_panel import PlayerSelectionPanel
+
+PSVG.set_size(BUTTON_DRAWER_SIZE)
+PSVG.set_linewidth(BUTTON_DRAWER_LINE_WIDTH)
 
 
 class Menu:
@@ -77,12 +79,12 @@ class Menu:
             title.draw()
             start_label.draw()
             garage_label.draw()
-            PSButtonDrawer.left(Menu.screen, (start_label.left - 200, start_label.center[1]))
-            PSButtonDrawer.slash(Menu.screen, (start_label.left - 130, start_label.center[1]))
-            PSButtonDrawer.square(Menu.screen, (start_label.left - 60, start_label.center[1]))
-            PSButtonDrawer.up(Menu.screen, (garage_label.left - 200, garage_label.center[1]))
-            PSButtonDrawer.slash(Menu.screen, (garage_label.left - 130, garage_label.center[1]))
-            PSButtonDrawer.triangle(Menu.screen, (garage_label.left - 60, garage_label.center[1]))
+            PSVG.left(Menu.screen, (start_label.left - 200, start_label.center[1]))
+            PSVG.slash(Menu.screen, (start_label.left - 130, start_label.center[1]))
+            PSVG.square(Menu.screen, (start_label.left - 60, start_label.center[1]))
+            PSVG.up(Menu.screen, (garage_label.left - 200, garage_label.center[1]))
+            PSVG.slash(Menu.screen, (garage_label.left - 130, garage_label.center[1]))
+            PSVG.triangle(Menu.screen, (garage_label.left - 60, garage_label.center[1]))
 
             pygame.display.flip()
             Menu.fpsclock.tick(60)
@@ -226,11 +228,19 @@ class Menu:
             PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[2], 1, "left"),
             PlayerSelectionPanel(PLAYER_SELECTION_PANEL_POSITIONS[3], 1, "right"),
         ]
-        
-        panels[0].set_from_player_config(PlayerConfigManager.get_by_controller(0, "left"))
-        panels[1].set_from_player_config(PlayerConfigManager.get_by_controller(0, "right"))
-        panels[2].set_from_player_config(PlayerConfigManager.get_by_controller(1, "left"))
-        panels[3].set_from_player_config(PlayerConfigManager.get_by_controller(1, "right"))
+
+        panels[0].set_from_player_config(
+            PlayerConfigManager.get_by_controller(0, "left")
+        )
+        panels[1].set_from_player_config(
+            PlayerConfigManager.get_by_controller(0, "right")
+        )
+        panels[2].set_from_player_config(
+            PlayerConfigManager.get_by_controller(1, "left")
+        )
+        panels[3].set_from_player_config(
+            PlayerConfigManager.get_by_controller(1, "right")
+        )
 
         save_label = px.Label(
             Menu.screen,
@@ -239,7 +249,7 @@ class Menu:
             (CENTER[0], Menu.screen.get_height() - 50),
             "midbottom",
             tc=SOFT_WHITE,
-            f="Comic Sans"
+            f="Comic Sans",
         )
 
         while True:
@@ -252,11 +262,11 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
- 
+
             ControllerManager.update()
             for p in panels:
                 p.update()
-            
+
             if ControllerManager.has_anyone_pressed_ps_button():
                 PlayerConfigManager.clear_players()
                 active_panels = [p for p in panels if p.is_active()]
