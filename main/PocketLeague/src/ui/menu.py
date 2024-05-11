@@ -4,7 +4,7 @@ from PygameXtras import PSVG
 
 from ..classes.controller_manager import ControllerManager
 from ..classes.player_config_manager import PlayerConfigManager
-from ..files.colors import DARK_BLUE, SOFT_WHITE
+from ..files.colors import DARK_BLUE, ERROR_LABEL_COLOR, SOFT_WHITE
 from ..files.config import *
 from ..game import Game
 from .player_selection_panel import PlayerSelectionPanel
@@ -55,6 +55,8 @@ class Menu:
             tc=SOFT_WHITE,
         )
 
+        error_labels = []
+
         run = True
         while run:
             event_list = pygame.event.get()
@@ -71,9 +73,25 @@ class Menu:
 
             keys = ControllerManager.get_pressed_by_everyone()
             if keys[3]:
-                Menu.match_config()
+                if len(errors := PlayerConfigManager.get_errors()) == 0:
+                    Menu.match_config()
+                    error_labels.clear()
+                else:
+                    error_labels.clear()
+                    for i, error in enumerate(errors):
+                        error_labels.append(
+                            px.Label(
+                                Menu.screen,
+                                error,
+                                40,
+                                (CENTER[0], garage_label.bottom + 70 + 80 * i),
+                                f="Comic Sans",
+                                tc=ERROR_LABEL_COLOR,
+                            )
+                        )
             if keys[1]:
                 Menu.player_config()
+                error_labels.clear()
 
             Menu.screen.fill(DARK_BLUE)
             title.draw()
@@ -85,6 +103,8 @@ class Menu:
             PSVG.up(Menu.screen, (garage_label.left - 200, garage_label.center[1]))
             PSVG.slash(Menu.screen, (garage_label.left - 130, garage_label.center[1]))
             PSVG.triangle(Menu.screen, (garage_label.left - 60, garage_label.center[1]))
+            for e_label in error_labels:
+                e_label.draw()
 
             pygame.display.flip()
             Menu.fpsclock.tick(60)
@@ -244,9 +264,9 @@ class Menu:
 
         save_label = px.Label(
             Menu.screen,
-            "Press PS button to save",
+            "Save",
             40,
-            (CENTER[0], Menu.screen.get_height() - 50),
+            (CENTER[0] + 50, Menu.screen.get_height() - 50),
             "midbottom",
             tc=SOFT_WHITE,
             f="Comic Sans",
@@ -278,6 +298,7 @@ class Menu:
             for p in panels:
                 p.draw(Menu.screen)
             save_label.draw()
+            PSVG.ps(Menu.screen, (save_label.left - 65, save_label.center[1] + 6))
 
             pygame.display.flip()
             Menu.fpsclock.tick(10)

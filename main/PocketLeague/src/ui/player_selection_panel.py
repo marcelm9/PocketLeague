@@ -86,7 +86,7 @@ class PlayerSelectionPanel:
         self.__indexes[0] = self.__possible_values[0].index(player_config.name)
         self.__indexes[1] = self.__possible_values[1].index(player_config.team)
         self.__indexes[2] = self.__possible_values[2].index(player_config.color)
-        self.__indexes[3] = self.__possible_values[3].index(player_config.boost)
+        self.__indexes[3] = self.__possible_values[3].index(player_config.boost_type)
         self.__indexes[4] = self.__possible_values[4].index(player_config.goal_explosion)
         self.__active = True
         self.__update_labels()
