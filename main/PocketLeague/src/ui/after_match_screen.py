@@ -34,6 +34,7 @@ class AfterMatchScreen:
             ),
             (5, 1 + len(PlayerConfigManager.get_player_configs())),
             (230, 100),
+            circle_radius=1
         )
 
         configs = PlayerConfigManager.get_player_configs()

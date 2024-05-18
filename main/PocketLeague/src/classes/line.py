@@ -2,12 +2,12 @@ import pygame
 from ..files.config import FIELD_LINE_SIZE
 
 class Line:
-    def __init__(self, pos1: tuple, pos2: tuple, bounce_direction: tuple, collisions: bool):
+    def __init__(self, pos1: tuple, pos2: tuple, bounce_direction: tuple, collisions: bool, color):
         self.pos1 = pos1
         self.pos2 = pos2
         self.bounce_direction = bounce_direction
         self.collisions = collisions
-        self.__color = (255, 255, 255) if self.collisions else (0,0,255)
+        self.__color = color
 
         # debug
         v1 = pygame.Vector2(bounce_direction)

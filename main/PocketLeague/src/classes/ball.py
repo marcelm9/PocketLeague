@@ -14,7 +14,6 @@ class Ball:
         self.__body.mass = 1
         self.__shape = pymunk.Circle(self.__body, radius=self.radius)
         self.__shape.collision_type = 0
-        print(f"Ball collision type =  {self.__shape.collision_type}")
         self.__shape.density = 1
         self.__shape.elasticity = 1
         self.__shape.friction = 1
@@ -38,3 +37,6 @@ class Ball:
 
     def get_speed(self):
         return self.__body.velocity.length
+    
+    def get_direction(self):
+        return tuple(self.__body.velocity)

@@ -17,8 +17,8 @@ class HUD:
     boost_displays: list[BoostDisplay] = []
 
     goal_colon: px.Label
-    team_0_goal_label: px.Label
-    team_1_goal_label: px.Label
+    team_blue_goal_label: px.Label
+    team_orange_goal_label: px.Label
     time_label: px.Label
 
     # for now
@@ -70,9 +70,9 @@ class HUD:
             tc=HUD_GOAL_TC,
             f=HUD_GOAL_FONT
         )
-        HUD.team_0_goal_label = px.Label(
+        HUD.team_blue_goal_label = px.Label(
             screen,
-            MatchStats.get_goals_team0(),
+            MatchStats.get_goals_team_blue(),
             HUD_GOAL_TEXTSIZE,
             HUD.goal_colon.midleft,
             "midright",
@@ -81,9 +81,9 @@ class HUD:
             tc=HUD_GOAL_TC,
             to=HUD_GOAL_TO
         )
-        HUD.team_1_goal_label = px.Label(
+        HUD.team_orange_goal_label = px.Label(
             screen,
-            MatchStats.get_goals_team1(),
+            MatchStats.get_goals_team_orange(),
             HUD_GOAL_TEXTSIZE,
             HUD.goal_colon.midright,
             "midleft",
@@ -117,8 +117,8 @@ class HUD:
         )
 
     def update_score():
-        HUD.team_0_goal_label.update_text(MatchStats.get_goals_team0())
-        HUD.team_1_goal_label.update_text(MatchStats.get_goals_team1())
+        HUD.team_blue_goal_label.update_text(MatchStats.get_goals_team_blue())
+        HUD.team_orange_goal_label.update_text(MatchStats.get_goals_team_orange())
 
     def update_time_display():
         m, s = int(MatchStats.get_match_seconds_left() // 60), int(MatchStats.get_match_seconds_left() % 60)
@@ -134,8 +134,8 @@ class HUD:
         for boost_display in HUD.boost_displays:
             boost_display.draw(HUD.screen)
         HUD.goal_colon.draw()
-        HUD.team_0_goal_label.draw()
-        HUD.team_1_goal_label.draw()
+        HUD.team_blue_goal_label.draw()
+        HUD.team_orange_goal_label.draw()
         HUD.time_label.draw()
 
         if MatchStats.get_countdown() > 0:
