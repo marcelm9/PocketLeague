@@ -3,11 +3,7 @@ from .ball import Ball
 
 class BallManager:
     
-    ball: Ball
-
-    @staticmethod
-    def create_ball():
-        BallManager.ball = Ball()
+    ball: Ball = Ball()
 
     @staticmethod
     def get_ball():

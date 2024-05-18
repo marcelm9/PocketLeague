@@ -1,5 +1,7 @@
 import pygame
 
+from .ui.after_match_screen import AfterMatchScreen
+
 from .classes.player_manager import PlayerManager
 
 from .classes.player_config_manager import PlayerConfigManager
@@ -60,10 +62,10 @@ class Game:
             )
 
         Updater.init(Game.fpsclock)
+        AfterMatchScreen.init(Game.fpsclock, Game.screen)
+        Renderer.init(Game.screen)
         PlayerManager.respawn_players()
         HUD.init(Game.screen)
-        Renderer.init(Game.screen)
-        BallManager.create_ball()
         MatchStats.start_match()
         HUD.update_time_display()
         BoostPadsManager.init()

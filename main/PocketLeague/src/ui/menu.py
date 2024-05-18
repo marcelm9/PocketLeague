@@ -89,7 +89,7 @@ class Menu:
                                 tc=ERROR_LABEL_COLOR,
                             )
                         )
-            if keys[1]:
+            elif keys[1]:
                 Menu.player_config()
                 error_labels.clear()
 

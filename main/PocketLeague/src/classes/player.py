@@ -31,11 +31,33 @@ class Player:
         self.__body.position = (0, 0)
         self.__shape = pymunk.Circle(self.__body, self.__radius)
         self.__shape.elasticity = 0.9
+        id = Space.get_and_incr_id()
+        self.__shape.collision_type = id
+        # self.__collision_handler = Space.space.add_collision_handler(
+        #     collision_type_a = self.__shape.collision_type,
+        #     collision_type_b = BallManager.get_ball().get_shape().collision_type
+        # )
+        # self.__collision_handler.post_solve = self.__post_solve_player_ball_collision
 
         # bot
         self.__is_bot = False
 
         Space.space.add(self.__body, self.__shape)
+        Space.add_mapping(id, self)
+
+    # def __post_solve_player_ball_collision(self, arbiter, space, data):
+    #     # Get the shapes involved in the collision
+    #     shape_a, shape_b = arbiter.shapes
+
+    #     # Check if the shapes correspond to the player and the ball
+    #     if (shape_a == self.__shape and shape_b == BallManager.get_ball().get_shape()) or \
+    #     (shape_b == self.__shape and shape_a == BallManager.get_ball().get_shape()):
+    #         # Return True to process the collision
+    #         print(f"{self.__name} had a contact with the ball")
+    #         return True
+    #     else:
+    #         # Return False to ignore the collision
+    #         return False
 
     def collides_with(self, circle_center, circle_radius) -> bool:
         return (self.get_pos()[0] - circle_center[0]) ** 2 + (
@@ -132,6 +154,7 @@ class Player:
 
     def set_name(self, name):
         self.__name = name
+        print(f"{self.__name} has collision id {self.__shape.collision_type}")
 
     def set_pos(self, pos):
         self.__body.position = pos

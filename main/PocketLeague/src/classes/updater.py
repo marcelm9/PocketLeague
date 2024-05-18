@@ -1,12 +1,13 @@
 import pygame
 
+from ..ui.after_match_screen import AfterMatchScreen
+
 from .player_manager import PlayerManager
 
 from .boost_pads_manager import BoostPadsManager
 
 from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE
 from .ball_manager import BallManager
-from .player import Player
 from .space import Space
 from .match_stats import MatchStats
 from .HUD import HUD
@@ -37,9 +38,15 @@ class Updater:
                     exit()
                 elif event.key == pygame.K_r:
                     BallManager.reset_ball()
+                elif event.key == pygame.K_SPACE:
+                    MatchStats._finish_game()
         
         if MatchStats.get_countdown() > 0:
             return
+        
+        if MatchStats.get_match_seconds_left() == 0:
+            if BallManager.get_ball().get_speed() < 0.05:
+                AfterMatchScreen.show()
         
         MatchStats.reduce_match_time(dt_s)
 
