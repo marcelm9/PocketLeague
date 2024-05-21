@@ -1,16 +1,16 @@
 import pygame
 
-from .classes.player_config_manager import PlayerConfigManager
-
-from .classes.ball_manager import BallManager
 from .classes.boost_pads_manager import BoostPadsManager
 from .classes.field import Field
 from .classes.HUD import HUD
 from .classes.match_stats import MatchStats
-from .classes.player import Player
+from .classes.player_config_manager import PlayerConfigManager
+from .classes.player_manager import PlayerManager
 from .classes.renderer import Renderer
+from .classes.space import Space
 from .classes.updater import Updater
 from .files.config import *
+from .ui.after_match_screen import AfterMatchScreen
 
 
 class Game:
@@ -31,38 +31,36 @@ class Game:
 
     def __configure():
         if len(PlayerConfigManager.get_player_configs()) < 2:
-            print(f"At least two players have to be registered (currently {len(PlayerConfigManager.get_player_configs())})")
-            return False
+            raise Exception(f"At least two players have to be registered (currently {len(PlayerConfigManager.get_player_configs())})")
 
         for cfg in PlayerConfigManager.get_player_configs():
-            p = Player()
-            p.set_name(cfg.name)
-            p.set_team({"Team Blue": 0, "Team Orange": 1}[cfg.team])
-            p.set_color(COLOR_MAP[cfg.color])
-            p.set_boost_type(cfg.boost)
-            p.set_goal_explosion(cfg.goal_explosion)
-            p.set_controller_input(
+            PlayerManager.summon_player(
+                cfg.name,
+                cfg.team,
+                cfg.color,
+                cfg.boost_type,
+                cfg.goal_explosion,
                 cfg.controller_id,
-                *({"left": (0, 9), "right": (1, 10)}[cfg.controller_side])
+                cfg.controller_side
             )
 
         Field.init()
 
     def start():
-        if Game.__configure() == False:
-            # TODO: improve handling
-            return
         
         if Game.screen is None:
             Game.init(
                 pygame.display.get_surface()
             )
 
-        Player.reset_all_player_positions()
-        HUD.init(Game.screen)
+        Space.init(MatchStats.handle_player_ball_collision)
+        Game.__configure()
+        Updater.init(Game.fpsclock)
+        AfterMatchScreen.init(Game.fpsclock, Game.screen)
         Renderer.init(Game.screen)
-        BallManager.create_ball()
-        MatchStats.start_match()
+        HUD.init(Game.screen)
+        MatchStats.start_match(PlayerManager.get_players())
+        PlayerManager.respawn_players()
         HUD.update_time_display()
         BoostPadsManager.init()
 
@@ -72,4 +70,4 @@ class Game:
             Renderer.render()
             
             pygame.display.flip()
-            pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")
+            # pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")

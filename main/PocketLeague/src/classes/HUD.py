@@ -3,10 +3,11 @@ import math
 import pygame
 import PygameXtras as px
 
+from .player_manager import PlayerManager
+
 from ..files.config import *
 from .boost_display import BoostDisplay
 from .match_stats import MatchStats
-from .player import Player
 
 
 class HUD:
@@ -16,8 +17,8 @@ class HUD:
     boost_displays: list[BoostDisplay] = []
 
     goal_colon: px.Label
-    team_0_goal_label: px.Label
-    team_1_goal_label: px.Label
+    team_blue_goal_label: px.Label
+    team_orange_goal_label: px.Label
     time_label: px.Label
 
     # for now
@@ -27,11 +28,6 @@ class HUD:
     player_1_boost_rect.midtop = (WIN_WIDTH - 500, 10)
 
     def init(screen: pygame.Surface):
-        assert len(Player.players) in (2, 4)
-        team_color = [
-            TEAM0_COLOR,
-            TEAM1_COLOR,
-        ]
         HUD.screen = screen
         positions = [
             # label position, label anchor, boost_display offset
@@ -40,16 +36,16 @@ class HUD:
             ((10, screen.get_height() - 10), "bottomleft", (225, 0)),
             ((screen.get_width() - 10, screen.get_height() - 10), "bottomright", (-225, 0)),
         ]
-        for i in range(len(Player.players)):
+        for i, player in enumerate(PlayerManager.get_players()):
             HUD.labels.append(
                 px.Label(
                     screen,
-                    Player.players[i].name,
+                    player.get_name(),
                     HUD_TEXT_SIZE,
                     positions[i][0],
                     positions[i][1],
-                    bgc=Player.players[i].color,
-                    bc=team_color[Player.players[i].team],
+                    bgc=player.get_color(),
+                    bc=TEAM_COLOR_MAP[player.get_team()],
                     f=HUD_FONT,
                     fd=HUD_DIMENSIONS,
                     bw=HUD_BW,
@@ -74,9 +70,9 @@ class HUD:
             tc=HUD_GOAL_TC,
             f=HUD_GOAL_FONT
         )
-        HUD.team_0_goal_label = px.Label(
+        HUD.team_blue_goal_label = px.Label(
             screen,
-            MatchStats.get_goals_team0(),
+            MatchStats.get_goals_team_blue(),
             HUD_GOAL_TEXTSIZE,
             HUD.goal_colon.midleft,
             "midright",
@@ -85,9 +81,9 @@ class HUD:
             tc=HUD_GOAL_TC,
             to=HUD_GOAL_TO
         )
-        HUD.team_1_goal_label = px.Label(
+        HUD.team_orange_goal_label = px.Label(
             screen,
-            MatchStats.get_goals_team1(),
+            MatchStats.get_goals_team_orange(),
             HUD_GOAL_TEXTSIZE,
             HUD.goal_colon.midright,
             "midleft",
@@ -121,8 +117,8 @@ class HUD:
         )
 
     def update_score():
-        HUD.team_0_goal_label.update_text(MatchStats.get_goals_team0())
-        HUD.team_1_goal_label.update_text(MatchStats.get_goals_team1())
+        HUD.team_blue_goal_label.update_text(MatchStats.get_goals_team_blue())
+        HUD.team_orange_goal_label.update_text(MatchStats.get_goals_team_orange())
 
     def update_time_display():
         m, s = int(MatchStats.get_match_seconds_left() // 60), int(MatchStats.get_match_seconds_left() % 60)
@@ -138,8 +134,8 @@ class HUD:
         for boost_display in HUD.boost_displays:
             boost_display.draw(HUD.screen)
         HUD.goal_colon.draw()
-        HUD.team_0_goal_label.draw()
-        HUD.team_1_goal_label.draw()
+        HUD.team_blue_goal_label.draw()
+        HUD.team_orange_goal_label.draw()
         HUD.time_label.draw()
 
         if MatchStats.get_countdown() > 0:
@@ -147,6 +143,6 @@ class HUD:
             HUD.countdown_label.draw()
 
     def update_boosts():
-        for i in range(len(Player.players)):
-            HUD.boost_displays[i].update(Player.players[i].get_boost())
+        for i, player in enumerate(PlayerManager.get_players()):
+            HUD.boost_displays[i].update(player.get_boost())
 

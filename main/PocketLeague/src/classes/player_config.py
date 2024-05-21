@@ -3,9 +3,9 @@ from dataclasses import dataclass
 @dataclass
 class PlayerConfig:
     name: str
-    team: str # TODO: improve by using enum
+    team: str
     color: str
-    boost: str
+    boost_type: str
     goal_explosion: str
 
     controller_id: int
