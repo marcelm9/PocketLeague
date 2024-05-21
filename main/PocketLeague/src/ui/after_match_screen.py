@@ -2,6 +2,8 @@ import sys
 import pygame
 import PygameXtras as px
 
+from ..files.colors import SOFT_WHITE
+
 from ..classes.player_stats import PlayerStats
 
 from ..classes.match_stats import MatchStats
@@ -40,13 +42,13 @@ class AfterMatchScreen:
         configs = PlayerConfigManager.get_player_configs()
 
         l_player_names = [
-            px.Label(AfterMatchScreen.__surface, name, 40, table.get((0, i)))
+            px.Label(AfterMatchScreen.__surface, name, 40, table.get((0, i)), tc=SOFT_WHITE)
             for i, name in enumerate([player.name for player in configs], 1)
         ]
 
         l_headers = [
-            px.Label(AfterMatchScreen.__surface, name, 40, table.get((i, 0)))
-            for i, name in enumerate(["Points", "Goals", "Saves", "Layups"], 1)
+            px.Label(AfterMatchScreen.__surface, name, 40, table.get((i, 0)), tc=SOFT_WHITE)
+            for i, name in enumerate(["Points", "Goals", "Saves", "Assists"], 1)
         ]
 
         stat_labels = []
@@ -58,6 +60,7 @@ class AfterMatchScreen:
                     stats[player].get_points(),
                     40,
                     table.get((1, i)),
+                    tc=SOFT_WHITE
                 )
             )
             stat_labels.append(
@@ -66,6 +69,7 @@ class AfterMatchScreen:
                     stats[player].goals,
                     40,
                     table.get((2, i)),
+                    tc=SOFT_WHITE
                 )
             )
             stat_labels.append(
@@ -74,14 +78,16 @@ class AfterMatchScreen:
                     stats[player].saves,
                     40,
                     table.get((3, i)),
+                    tc=SOFT_WHITE
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
-                    stats[player].layups,
+                    stats[player].assists,
                     40,
                     table.get((4, i)),
+                    tc=SOFT_WHITE
                 )
             )
 

@@ -135,7 +135,6 @@ class Player:
 
     def set_name(self, name):
         self.__name = name
-        print(f"{self.__name} has collision id {self.__shape.collision_type}")
 
     def set_pos(self, pos):
         self.__body.position = pos

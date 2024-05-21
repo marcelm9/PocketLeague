@@ -63,10 +63,10 @@ class Updater:
         if ball_pos_x < FIELD_LEFT_EDGE or ball_pos_x > FIELD_RIGHT_EDGE:
             if ball_pos_x < FIELD_LEFT_EDGE:
                 # goal right team
-                MatchStats.register_goal_for_team_orange()
+                MatchStats.register_goal("Team Orange")
             elif ball_pos_x > FIELD_RIGHT_EDGE:
                 # goal left team
-                MatchStats.register_goal_for_team_blue()
+                MatchStats.register_goal("Team Blue")
             HUD.update_score()
             BallManager.reset_ball()
             PlayerManager.respawn_players()

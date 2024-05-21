@@ -4,7 +4,7 @@ from ..files.config import (
     POINTS_WEIGHT_GOAL,
     POINTS_WEIGHT_SHOT,
     POINTS_WEIGHT_SAVE,
-    POINTS_WEIGHT_LAYUP,
+    POINTS_WEIGHT_ASSIST,
 )
 
 
@@ -14,7 +14,7 @@ class PlayerStats:
     goals: int = 0
     shots: int = 0
     saves: int = 0
-    layups: int = 0
+    assists: int = 0
 
     def get_points(self):
         return (
@@ -22,5 +22,5 @@ class PlayerStats:
             + self.goals * POINTS_WEIGHT_GOAL
             + self.shots * POINTS_WEIGHT_SHOT
             + self.saves * POINTS_WEIGHT_SAVE
-            + self.layups * POINTS_WEIGHT_LAYUP
+            + self.assists * POINTS_WEIGHT_ASSIST
         )

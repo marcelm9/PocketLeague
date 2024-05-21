@@ -137,13 +137,13 @@ files = [
 
 [[package]]
 name = "pygamextras"
-version = "1.1.6"
+version = "1.1.8"
 description = "Labels, Buttons and much more for pygame"
 optional = false
 python-versions = "<4.0,>=3.11"
 files = [
-    {file = "pygamextras-1.1.6-py3-none-any.whl", hash = "sha256:4924f29971c5f4abe4f767b2a7286a350307b26194f35132ddc9c9cc3cf8457c"},
-    {file = "pygamextras-1.1.6.tar.gz", hash = "sha256:95d87e0875378797e143894a1973f33e814d4d5f74c4bcd285aa2fe4da4f40e8"},
+    {file = "pygamextras-1.1.8-py3-none-any.whl", hash = "sha256:bfa0d91ad98a6336ff692cc35697439eba1c44bbafde963c3646af8c66261b5c"},
+    {file = "pygamextras-1.1.8.tar.gz", hash = "sha256:c6ba37510a37e6fc2af0dac276e32df162390ff82022d0e17ecb3ac1c807ff65"},
 ]
 
 [package.dependencies]
