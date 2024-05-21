@@ -8,7 +8,6 @@ from .space import Space
 class Field:
 
     lines: list[Line] = []
-    goals: list[Line] = []
 
     __rl: pygame.Rect # rect left
     __rc: pygame.Rect # rect center
@@ -80,32 +79,19 @@ class Field:
             vector.scale_to_length(1)
             goal_line = False
             if start[0] < rc.left or end[0] < rc.left:
-                collisions = False
                 color = TEAM_COLOR_MAP["Team Blue"]
-                goal_line = True
             elif start[0] > rc.right or end[0] > rc.right:
-                collisions = False
                 color = TEAM_COLOR_MAP["Team Orange"]
-                goal_line = True
             else:
-                collisions = True
                 color = (255,255,255)
-            if goal_line:
-                Field.goals.append(
-                    Line(start, end, vector, collisions, color)
-                )
-            else:
-                Field.lines.append(
-                    Line(start, end, vector, collisions, color)
-                )
+            Field.lines.append(
+                Line(start, end, vector, color)
+            )
 
         Space.space.add(wall, *wall_shapes)
 
     def get_lines():
         return Field.lines
-    
-    def get_goal_lines():
-        return Field.goals
 
     def get_blue_goal_line():
         return (Field.__rl.topright, Field.__rl.bottomright)

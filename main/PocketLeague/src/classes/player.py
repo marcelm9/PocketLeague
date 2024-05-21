@@ -98,7 +98,7 @@ class Player:
                     line.pos1, line.pos2, self.__body.position
                 )
                 dist_move = self.__radius - dist_center_from_line
-                v = pygame.Vector2(line.bounce_direction)
+                v = pygame.Vector2(line.get_bounce_direction())
                 v.scale_to_length(dist_move)
                 # pymunk
                 self.__body.position = (

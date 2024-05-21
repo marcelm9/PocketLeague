@@ -34,21 +34,36 @@ class AfterMatchScreen:
                 AfterMatchScreen.__surface.get_width() // 2,
                 AfterMatchScreen.__surface.get_height() // 2,
             ),
-            (5, 1 + len(PlayerConfigManager.get_player_configs())),
-            (230, 100),
-            circle_radius=1
+            (6, 1 + len(PlayerConfigManager.get_player_configs())),
+            (190, 100),
         )
 
         configs = PlayerConfigManager.get_player_configs()
 
         l_player_names = [
-            px.Label(AfterMatchScreen.__surface, name, 40, table.get((0, i)), tc=SOFT_WHITE)
+            px.Label(
+                AfterMatchScreen.__surface,
+                name,
+                30,
+                table.get((0, i)),
+                tc=SOFT_WHITE,
+                f="Verdana",
+            )
             for i, name in enumerate([player.name for player in configs], 1)
         ]
 
         l_headers = [
-            px.Label(AfterMatchScreen.__surface, name, 40, table.get((i, 0)), tc=SOFT_WHITE)
-            for i, name in enumerate(["Points", "Goals", "Saves", "Assists"], 1)
+            px.Label(
+                AfterMatchScreen.__surface,
+                name,
+                30,
+                (table.get((i, 0))[0], table.get((i, 0))[1] + 10),
+                tc=SOFT_WHITE,
+                f="Verdana",
+            )
+            for i, name in enumerate(
+                ["Points", "Goals", "Assists", "Saves", "Shots"], 1
+            )
         ]
 
         stat_labels = []
@@ -58,36 +73,50 @@ class AfterMatchScreen:
                 px.Label(
                     AfterMatchScreen.__surface,
                     stats[player].get_points(),
-                    40,
+                    30,
                     table.get((1, i)),
-                    tc=SOFT_WHITE
+                    tc=SOFT_WHITE,
+                    f="Verdana",
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
                     stats[player].goals,
-                    40,
+                    30,
                     table.get((2, i)),
-                    tc=SOFT_WHITE
-                )
-            )
-            stat_labels.append(
-                px.Label(
-                    AfterMatchScreen.__surface,
-                    stats[player].saves,
-                    40,
-                    table.get((3, i)),
-                    tc=SOFT_WHITE
+                    tc=SOFT_WHITE,
+                    f="Verdana",
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
                     stats[player].assists,
-                    40,
+                    30,
+                    table.get((3, i)),
+                    tc=SOFT_WHITE,
+                    f="Verdana",
+                )
+            )
+            stat_labels.append(
+                px.Label(
+                    AfterMatchScreen.__surface,
+                    stats[player].saves,
+                    30,
                     table.get((4, i)),
-                    tc=SOFT_WHITE
+                    tc=SOFT_WHITE,
+                    f="Verdana",
+                )
+            )
+            stat_labels.append(
+                px.Label(
+                    AfterMatchScreen.__surface,
+                    stats[player].shots,
+                    30,
+                    table.get((5, i)),
+                    tc=SOFT_WHITE,
+                    f="Verdana",
                 )
             )
 
@@ -103,7 +132,6 @@ class AfterMatchScreen:
                         sys.exit()
 
             AfterMatchScreen.__surface.fill((30, 30, 30))
-            table.draw_dots()
             for l in l_headers + l_player_names + stat_labels:
                 l.draw()
 
