@@ -1,3 +1,4 @@
+import random
 import pygame
 import PygameXtras as px
 from .player_stats import PlayerStats
@@ -150,3 +151,16 @@ class MatchStats:
             MatchStats.__last_shot_by = player.get_team()
 
         return True
+
+    def _inject_test(players):
+        goals = [3, 1]
+        MatchStats.__goals_team_blue = goals.pop(random.randint(0, 1))
+        MatchStats.__goals_team_orange = goals.pop(0)
+
+        for p in players:
+            MatchStats.__player_stats[p[0]] = PlayerStats()
+            MatchStats.__player_stats[p[0]].touches = random.randint(5, 30)
+            MatchStats.__player_stats[p[0]].goals = random.randint(0, 1)
+            MatchStats.__player_stats[p[0]].saves = random.randint(0, 2)
+            MatchStats.__player_stats[p[0]].assists = random.randint(0, 2)
+            MatchStats.__player_stats[p[0]].shots = random.randint(0, 5)

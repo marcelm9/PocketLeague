@@ -69,3 +69,9 @@ class PlayerConfigManager:
             ),
         ]
         print("Using debug player configs")
+
+    def _inject_test(players):
+        for p in players:
+            PlayerConfigManager.__players.append(
+                PlayerConfig(p[0], p[1], None, None, None, None, None)
+            )

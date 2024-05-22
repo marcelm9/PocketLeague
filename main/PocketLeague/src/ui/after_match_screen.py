@@ -34,7 +34,8 @@ class AfterMatchScreen:
             (190, 100),
         )
 
-        configs = PlayerConfigManager.get_player_configs()
+        stats = MatchStats.get_player_stats()
+        configs = sorted(sorted(PlayerConfigManager.get_player_configs(), key = lambda x: stats[x.name].get_points(), reverse = True), key = lambda x: x.team, reverse = MatchStats.get_goals_team_orange() > MatchStats.get_goals_team_blue())
         font = "Comic Sans"
         fw, fh = 300, 80
 
@@ -67,7 +68,6 @@ class AfterMatchScreen:
         ]
 
         stat_labels = []
-        stats = MatchStats.get_player_stats()
         for i, player in enumerate(configs, 1):
             stat_labels.append(
                 px.Label(
@@ -145,7 +145,7 @@ class AfterMatchScreen:
             130,
             (
                 AfterMatchScreen.__surface.get_width() // 2,
-                50,
+                50 - 24 * (len(configs) - 2),
             ),
             "midtop",
             tc=winner_color,
