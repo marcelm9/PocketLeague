@@ -19,9 +19,9 @@ class Renderer:
         for line in Field.get_lines():
             line.draw(Renderer.screen)
 
-        BallManager.get_ball().draw(Renderer.screen)
 
         PlayerManager.draw(Renderer.screen)
-
         BoostPadsManager.draw(Renderer.screen)
+        BallManager.get_ball().draw(Renderer.screen)
+
         HUD.draw()

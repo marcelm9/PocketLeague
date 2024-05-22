@@ -1,16 +1,12 @@
 import sys
+
 import pygame
 import PygameXtras as px
 
-from ..files.colors import SOFT_WHITE
-
-from ..classes.player_stats import PlayerStats
-
 from ..classes.match_stats import MatchStats
-
 from ..classes.player_config_manager import PlayerConfigManager
-
-from ..files.config import AFTER_MATCH_SCREEN_SIZE, CENTER
+from ..files.colors import SOFT_WHITE
+from ..files.config import AFTER_MATCH_SCREEN_SIZE, CENTER, TEAM_COLOR_MAP
 
 
 class AfterMatchScreen:
@@ -39,17 +35,21 @@ class AfterMatchScreen:
         )
 
         configs = PlayerConfigManager.get_player_configs()
+        font = "Comic Sans"
+        fw, fh = 300, 80
 
         l_player_names = [
             px.Label(
                 AfterMatchScreen.__surface,
-                name,
+                player.name,
                 30,
                 table.get((0, i)),
                 tc=SOFT_WHITE,
-                f="Verdana",
+                fd=(fw, fh),
+                bgc=TEAM_COLOR_MAP[player.team],
+                f=font,
             )
-            for i, name in enumerate([player.name for player in configs], 1)
+            for i, player in enumerate(configs, 1)
         ]
 
         l_headers = [
@@ -59,7 +59,7 @@ class AfterMatchScreen:
                 30,
                 (table.get((i, 0))[0], table.get((i, 0))[1] + 10),
                 tc=SOFT_WHITE,
-                f="Verdana",
+                f=font,
             )
             for i, name in enumerate(
                 ["Points", "Goals", "Assists", "Saves", "Shots"], 1
@@ -68,57 +68,115 @@ class AfterMatchScreen:
 
         stat_labels = []
         stats = MatchStats.get_player_stats()
-        for i, player in enumerate([player.name for player in configs], 1):
+        for i, player in enumerate(configs, 1):
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
-                    stats[player].get_points(),
+                    stats[player.name].get_points(),
                     30,
                     table.get((1, i)),
                     tc=SOFT_WHITE,
-                    f="Verdana",
+                    fd=(fw, fh),
+                    bgc=TEAM_COLOR_MAP[player.team],
+                    f=font,
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
-                    stats[player].goals,
+                    stats[player.name].goals,
                     30,
                     table.get((2, i)),
                     tc=SOFT_WHITE,
-                    f="Verdana",
+                    fd=(fw, fh),
+                    bgc=TEAM_COLOR_MAP[player.team],
+                    f=font,
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
-                    stats[player].assists,
+                    stats[player.name].assists,
                     30,
                     table.get((3, i)),
                     tc=SOFT_WHITE,
-                    f="Verdana",
+                    fd=(fw, fh),
+                    bgc=TEAM_COLOR_MAP[player.team],
+                    f=font,
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
-                    stats[player].saves,
+                    stats[player.name].saves,
                     30,
                     table.get((4, i)),
                     tc=SOFT_WHITE,
-                    f="Verdana",
+                    fd=(fw, fh),
+                    bgc=TEAM_COLOR_MAP[player.team],
+                    f=font,
                 )
             )
             stat_labels.append(
                 px.Label(
                     AfterMatchScreen.__surface,
-                    stats[player].shots,
+                    stats[player.name].shots,
                     30,
                     table.get((5, i)),
                     tc=SOFT_WHITE,
-                    f="Verdana",
+                    fd=(fw, fh),
+                    bgc=TEAM_COLOR_MAP[player.team],
+                    f=font,
                 )
             )
+
+        if MatchStats.get_goals_team_blue() > MatchStats.get_goals_team_orange():
+            winner_name = "Blue"
+            winner_color = TEAM_COLOR_MAP["Team Blue"]
+        elif MatchStats.get_goals_team_orange() > MatchStats.get_goals_team_blue():
+            winner_name = "Orange"
+            winner_color = TEAM_COLOR_MAP["Team Orange"]
+        else:
+            raise Exception("This should not happen")
+
+        winning_team_label = px.Label(
+            AfterMatchScreen.__surface,
+            f"{winner_name} won!",
+            130,
+            (
+                AfterMatchScreen.__surface.get_width() // 2,
+                50,
+            ),
+            "midtop",
+            tc=winner_color,
+            f=font,
+        )
+
+        play_again_label = px.Label(
+            AfterMatchScreen.__surface,
+            "Play again",
+            50,
+            (
+                AfterMatchScreen.__surface.get_width() // 2 - 300 + 110,
+                AfterMatchScreen.__surface.get_height() - 50,
+            ),
+            "midbottom",
+            tc=SOFT_WHITE,
+            f="Comic Sans",
+        )
+
+        main_menu_label = px.Label(
+            AfterMatchScreen.__surface,
+            "Main Menu",
+            50,
+            (
+                AfterMatchScreen.__surface.get_width() // 2 + 300 + 110,
+                AfterMatchScreen.__surface.get_height() - 50,
+            ),
+            "midbottom",
+            tc=SOFT_WHITE,
+            f="Comic Sans",
+        )
 
         while True:
             event_list = pygame.event.get()
@@ -131,9 +189,55 @@ class AfterMatchScreen:
                         pygame.quit()
                         sys.exit()
 
-            AfterMatchScreen.__surface.fill((30, 30, 30))
-            for l in l_headers + l_player_names + stat_labels:
+            # draw gray background
+            pygame.draw.rect(
+                AfterMatchScreen.__surface,
+                (50, 50, 50),
+                (0, 0, AfterMatchScreen.__rect.width, AfterMatchScreen.__rect.height),
+                0,
+                15,
+            )
+
+            winning_team_label.draw()
+
+            for l in l_headers + stat_labels + l_player_names:
                 l.draw()
+
+            play_again_label.draw()
+            main_menu_label.draw()
+            px.PSVG.right(
+                AfterMatchScreen.__surface,
+                (play_again_label.left - 200, play_again_label.center[1]),
+            )
+            px.PSVG.slash(
+                AfterMatchScreen.__surface,
+                (play_again_label.left - 130, play_again_label.center[1]),
+            )
+            px.PSVG.circle(
+                AfterMatchScreen.__surface,
+                (play_again_label.left - 60, play_again_label.center[1]),
+            )
+            px.PSVG.down(
+                AfterMatchScreen.__surface,
+                (main_menu_label.left - 200, main_menu_label.center[1]),
+            )
+            px.PSVG.slash(
+                AfterMatchScreen.__surface,
+                (main_menu_label.left - 130, main_menu_label.center[1]),
+            )
+            px.PSVG.cross(
+                AfterMatchScreen.__surface,
+                (main_menu_label.left - 60, main_menu_label.center[1]),
+            )
+
+            # draw white outline
+            pygame.draw.rect(
+                AfterMatchScreen.__surface,
+                (255, 255, 255),
+                (0, 0, AfterMatchScreen.__rect.width, AfterMatchScreen.__rect.height),
+                5,
+                15,
+            )
 
             AfterMatchScreen.__screen.blit(
                 AfterMatchScreen.__surface, AfterMatchScreen.__rect
