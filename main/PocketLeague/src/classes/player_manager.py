@@ -53,7 +53,7 @@ class PlayerManager:
                 orange_i += 1
 
     @staticmethod
-    def clear_players():
+    def reset():
         PlayerManager.__players.clear()
 
     @staticmethod

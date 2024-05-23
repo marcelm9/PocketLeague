@@ -66,8 +66,23 @@ class Game:
 
         while True:
             
-            Updater.update()
+            if (return_value := Updater.update()) != None:
+                break
             Renderer.render()
             
             pygame.display.flip()
             # pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")
+
+        
+        # reset everything
+        Space.reset()
+        PlayerManager.reset()
+        Field.reset()
+        Updater.reset()
+        Renderer.reset()
+        AfterMatchScreen.reset()
+        HUD.reset()
+        MatchStats.reset()
+        BoostPadsManager.reset()
+
+        return return_value

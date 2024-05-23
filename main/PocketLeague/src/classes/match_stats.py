@@ -30,7 +30,12 @@ class MatchStats:
         MatchStats.__match_time_left = 1
 
     def start_match(players):
+        MatchStats.__goals_team_blue = 0
+        MatchStats.__goals_team_orange = 0
+        MatchStats.__last_touches_dict.clear()
+        MatchStats.__last_shot_by = None
         MatchStats.__match_time_left = MATCH_DURATION_IN_SECONDS
+        MatchStats.__last_touches_list.clear()
         MatchStats.__player_team_map = {
             p: t for p, t in [
                 (player_.get_name(), player_.get_team()) for player_ in players

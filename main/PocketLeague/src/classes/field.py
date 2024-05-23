@@ -104,3 +104,11 @@ class Field:
 
     def get_orange_goal_center():
         return Field.__rr.midleft
+
+    def reset():
+            
+        Field.lines.clear()
+
+        Field.__rl = None
+        Field.__rc = None
+        Field.__rr = None

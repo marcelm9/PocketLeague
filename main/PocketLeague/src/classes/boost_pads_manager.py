@@ -9,6 +9,9 @@ class BoostPadsManager:
         for pos in BOOST_SPAWNS:
             BoostPadsManager.__pads.append(BoostPad(pos))
 
+    def reset():
+        BoostPadsManager.__pads.clear()
+
     def reset_pads():
         for pad in BoostPadsManager.__pads:
             pad.reset()

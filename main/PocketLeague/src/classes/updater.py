@@ -20,6 +20,9 @@ class Updater:
         # needs to be passed in from Game, otherwise the first iteration of .tick is very large
         Updater.__fpsclock = fpsclock
 
+    def reset():
+        Updater.__fpsclock = None
+
     def update():
         dt = Updater.__fpsclock.tick(FPS)
         dt_s = dt / 1000
@@ -46,7 +49,7 @@ class Updater:
         
         if MatchStats.get_match_seconds_left() == 0:
             if BallManager.get_ball().get_speed() < 0.05:
-                AfterMatchScreen.show()
+                return AfterMatchScreen.show()
         
         MatchStats.reduce_match_time(dt_s)
 

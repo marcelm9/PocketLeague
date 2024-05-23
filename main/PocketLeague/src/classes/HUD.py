@@ -21,11 +21,14 @@ class HUD:
     team_orange_goal_label: px.Label
     time_label: px.Label
 
-    # for now
-    player_0_boost_rect = pygame.Rect(0,0,200,40)
-    player_0_boost_rect.midtop = (500, 10)
-    player_1_boost_rect = pygame.Rect(0,0,200,40)
-    player_1_boost_rect.midtop = (WIN_WIDTH - 500, 10)
+    def reset():
+        HUD.screen = None
+        HUD.labels.clear()
+        HUD.boost_displays.clear()
+        HUD.goal_colon = None
+        HUD.team_blue_goal_label = None
+        HUD.team_orange_goal_label = None
+        HUD.time_label = None
 
     def init(screen: pygame.Surface):
         HUD.screen = screen

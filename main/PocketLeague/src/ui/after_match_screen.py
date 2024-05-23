@@ -3,6 +3,7 @@ import sys
 import pygame
 import PygameXtras as px
 
+from ..classes.controller_manager import ControllerManager
 from ..classes.match_stats import MatchStats
 from ..classes.player_config_manager import PlayerConfigManager
 from ..files.colors import SOFT_WHITE
@@ -22,6 +23,10 @@ class AfterMatchScreen:
         AfterMatchScreen.__fpsclock = fpsclock
         AfterMatchScreen.__screen = screen
 
+    def reset():
+        AfterMatchScreen.__fpsclock = None
+        AfterMatchScreen.__screen = None
+
     def show():
 
         table = px.Table(
@@ -35,7 +40,16 @@ class AfterMatchScreen:
         )
 
         stats = MatchStats.get_player_stats()
-        configs = sorted(sorted(PlayerConfigManager.get_player_configs(), key = lambda x: stats[x.name].get_points(), reverse = True), key = lambda x: x.team, reverse = MatchStats.get_goals_team_orange() > MatchStats.get_goals_team_blue())
+        configs = sorted(
+            sorted(
+                PlayerConfigManager.get_player_configs(),
+                key=lambda x: stats[x.name].get_points(),
+                reverse=True,
+            ),
+            key=lambda x: x.team,
+            reverse=MatchStats.get_goals_team_orange()
+            > MatchStats.get_goals_team_blue(),
+        )
         font = "Comic Sans"
         fw, fh = 240, 80
 
@@ -189,6 +203,12 @@ class AfterMatchScreen:
                         pygame.quit()
                         sys.exit()
 
+            keys = ControllerManager.get_pressed_by_everyone()
+            if keys[2]:
+                return "run"
+            elif keys[4]:
+                return "stop"
+
             # draw gray background
             pygame.draw.rect(
                 AfterMatchScreen.__surface,
@@ -205,7 +225,7 @@ class AfterMatchScreen:
 
             play_again_label.draw()
             main_menu_label.draw()
-            px.PSVG.right(
+            px.PSVG.down(
                 AfterMatchScreen.__surface,
                 (play_again_label.left - 200, play_again_label.center[1]),
             )
@@ -213,11 +233,11 @@ class AfterMatchScreen:
                 AfterMatchScreen.__surface,
                 (play_again_label.left - 130, play_again_label.center[1]),
             )
-            px.PSVG.circle(
+            px.PSVG.cross(
                 AfterMatchScreen.__surface,
                 (play_again_label.left - 60, play_again_label.center[1]),
             )
-            px.PSVG.down(
+            px.PSVG.right(
                 AfterMatchScreen.__surface,
                 (main_menu_label.left - 200, main_menu_label.center[1]),
             )
@@ -225,7 +245,7 @@ class AfterMatchScreen:
                 AfterMatchScreen.__surface,
                 (main_menu_label.left - 130, main_menu_label.center[1]),
             )
-            px.PSVG.cross(
+            px.PSVG.circle(
                 AfterMatchScreen.__surface,
                 (main_menu_label.left - 60, main_menu_label.center[1]),
             )

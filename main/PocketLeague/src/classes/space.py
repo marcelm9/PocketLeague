@@ -20,3 +20,8 @@ class Space:
         n = Space.id
         Space.id += 1
         return n
+    
+    def reset():
+        Space.id = 1
+        Space.space = pymunk.Space()
+        Space.__collision_func = None
