@@ -37,7 +37,7 @@ class AfterMatchScreen:
         stats = MatchStats.get_player_stats()
         configs = sorted(sorted(PlayerConfigManager.get_player_configs(), key = lambda x: stats[x.name].get_points(), reverse = True), key = lambda x: x.team, reverse = MatchStats.get_goals_team_orange() > MatchStats.get_goals_team_blue())
         font = "Comic Sans"
-        fw, fh = 300, 80
+        fw, fh = 240, 80
 
         l_player_names = [
             px.Label(
