@@ -1,4 +1,5 @@
 import random
+from typing import Literal
 import pygame
 import PygameXtras as px
 from .player_stats import PlayerStats
@@ -7,6 +8,7 @@ from ..files.config import (
     MATCH_DURATION_IN_SECONDS,
     WIN_WIDTH,
     DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED,
+    AFTER_GOAL_SECONDS
 )
 
 from .field import Field
@@ -26,13 +28,38 @@ class MatchStats:
     __last_touches_list: list[str] = [] # oldest touch ... newest touch
     __player_team_map: dict[str, str]
 
+    __state = "game" # game, aftergoal
+    __aftergoal_time = 0
+
+    def reset_aftergoal_time():
+        MatchStats.__aftergoal_time = AFTER_GOAL_SECONDS
+
+    def get_aftergoal_time():
+        return MatchStats.__aftergoal_time
+
+    def reduce_aftergoal_time(dt: float):
+        MatchStats.__aftergoal_time = max(MatchStats.__aftergoal_time - dt, 0)
+
+    def set_state(state: str):
+        assert state in ["game", "aftergoal"]
+        MatchStats.__state = state
+
+    def get_last_player_touch_by_team(team: Literal["Team Blue", "Team Orange"]):
+        return MatchStats.__last_touches_dict[team]
+
+    def get_state():
+        return MatchStats.__state
+
     def _finish_game():
         MatchStats.__match_time_left = 1
 
     def start_match(players):
         MatchStats.__goals_team_blue = 0
         MatchStats.__goals_team_orange = 0
-        MatchStats.__last_touches_dict.clear()
+        MatchStats.__last_touches_dict = {
+            "Team Blue": None,
+            "Team Orange": None
+        }
         MatchStats.__last_shot_by = None
         MatchStats.__match_time_left = MATCH_DURATION_IN_SECONDS
         MatchStats.__last_touches_list.clear()
@@ -109,7 +136,8 @@ class MatchStats:
         MatchStats.__last_touches_dict[player.get_team()] = player.get_name()
 
         ball_vect = pygame.Vector2(BallManager.get_ball().get_direction())
-        ball_vect.scale_to_length(WIN_WIDTH)
+        if ball_vect.length() > 0:
+            ball_vect.scale_to_length(WIN_WIDTH)
         ball_pos = pygame.Vector2(BallManager.get_ball().get_pos())
 
         if MatchStats.__last_shot_by is not None:
