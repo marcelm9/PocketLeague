@@ -24,7 +24,7 @@ class Game:
         Game.screen = screen
         Game.fpsclock = fpsclock
 
-    def __configure():
+    def __configure_players():
         if len(PlayerConfigManager.get_player_configs()) < 2:
             raise Exception(
                 f"At least two players have to be registered (currently {len(PlayerConfigManager.get_player_configs())})"
@@ -41,15 +41,11 @@ class Game:
                 cfg.controller_side,
             )
 
-        Field.init()
-
     def start():
 
-        if Game.screen is None:
-            Game.init(pygame.display.get_surface())
-
         Space.init(MatchStats.handle_player_ball_collision)
-        Game.__configure()
+        Game.__configure_players()
+        Field.init()
         Updater.init(Game.fpsclock)
         AfterMatchScreen.init(Game.fpsclock, Game.screen)
         Renderer.init(Game.screen)
@@ -80,5 +76,6 @@ class Game:
         BoostPadsManager.reset()
         GoalExplosionManager.reset()
         BallManager.destroy_ball()
+        MatchStats.reset()
 
         return return_value

@@ -36,6 +36,10 @@ class MatchStats:
 
     __goal_label = px.Label(None, "", 140, (WIN_WIDTH // 2, 220), "midtop", f="Comic Sans")
 
+    def reset():
+        MatchStats.__state = "game"
+        MatchStats.__overtime = 0
+
     def get_goal_label():
         return MatchStats.__goal_label
 
