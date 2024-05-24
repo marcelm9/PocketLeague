@@ -5,11 +5,11 @@ from ..particle_manager import ParticleManager
 
 
 class DragonGoalExplosion:
-    def __init__(self, position, direction_factor, duration, distance):
+    def __init__(self, position, direction_factor):
         self.__position = position
         self.__direction_factor = direction_factor
-        self.__duration = duration
-        self.__distance = distance
+        self.__duration = 2
+        self.__distance = 700
 
         self.__time_passed = 0
 

@@ -3,12 +3,12 @@ from PygameXtras import Function
 
 
 class RegularGoalExplosion:
-    def __init__(self, color, thickness, radius, duration, position):
-        self.__color = color
-        self.__thickness = thickness
-        self.__max_radius = radius
-        self.__duration = duration
+    def __init__(self, position, color):
         self.__position = position
+        self.__color = color
+        self.__thickness = 10
+        self.__max_radius = 700
+        self.__duration = 1.2
 
         self.__func = Function()
         self.__func.set_outer_values(0, 1)

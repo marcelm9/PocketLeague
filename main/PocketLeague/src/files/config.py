@@ -55,13 +55,15 @@ NAMES = [
     "Nachodip03", 
     "BlackRice_", 
     "Golfmensch99", 
-    "GoatRice"
+    "GoatRice",
 ]
 TEAM_NAMES = ["Team Blue", "Team Orange"]
 BOOST_TYPES = list(COLOR_MAP.keys())
 GOAL_EXPLOSION_TYPES = [
     "regular",
-    "dragons"
+    "red explosion",
+    "green explosion",
+    "dragons",
 ]
 
 HUD_BW = 10
