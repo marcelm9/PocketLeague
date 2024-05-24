@@ -13,7 +13,8 @@ if os.name == "nt":
 
 from src.ui.menu import Menu
 
-Menu.start()
+pygame.mouse.set_cursor(
+    (8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0)
+)
 
-# from src.game import Game
-# Game.debug()
+Menu.start()
