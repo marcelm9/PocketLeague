@@ -26,10 +26,12 @@ class Renderer:
         for line in Field.get_lines():
             line.draw(Renderer.screen)
 
+        ParticleManager.draw(Renderer.screen)
+        BoostPadsManager.draw(Renderer.screen)
+
         if MatchStats.get_state() != "aftergoal":
             BallManager.get_ball().draw(Renderer.screen)
-        PlayerManager.draw(Renderer.screen)
-        BoostPadsManager.draw(Renderer.screen)
+
         GoalExplosionManager.draw(Renderer.screen)
-        ParticleManager.draw(Renderer.screen)
+        PlayerManager.draw(Renderer.screen)
         HUD.draw()

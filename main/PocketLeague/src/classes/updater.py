@@ -119,3 +119,4 @@ class Updater:
                 BoostPadsManager.reset_pads()
                 MatchStats.set_state("game")
                 MatchStats.start_countdown()
+                ParticleManager.clear()

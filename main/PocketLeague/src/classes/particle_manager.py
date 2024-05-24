@@ -38,11 +38,14 @@ class ParticleManager:
                         math.cos(r) * explosion_power * random.random(),
                     ],
                     color,
-                    max_duration * (random.random() / 2 + ((2 - 1) / 2)),
+                    max_duration * (random.random() / 2 + ((2 - 1) / 2)), # generates factor between 0.5 and 1
                     radius_start,
                     radius_end=0,
                 )
             )
+
+    def clear():
+        ParticleManager.__particles.clear()
 
     def update(dt_s):
         ParticleManager.__particles = [
