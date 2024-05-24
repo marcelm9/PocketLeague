@@ -62,7 +62,8 @@ BOOST_TYPES = [
     "regular"
 ]
 GOAL_EXPLOSION_TYPES = [
-    "regular"
+    "regular",
+    "dragons"
 ]
 
 HUD_BW = 10

@@ -6,7 +6,7 @@ from ..ui.after_match_screen import AfterMatchScreen
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
 from .field import Field
-from .goal_explosion_manager import GoalExplosionManager
+from .goal_explosions.goal_explosion_manager import GoalExplosionManager
 from .HUD import HUD
 from .match_stats import MatchStats
 from .player_manager import PlayerManager
@@ -74,13 +74,13 @@ class Updater:
                     # goal right team
                     MatchStats.register_goal("Team Orange")
                     GoalExplosionManager.summon_goal_explosion(
-                        BallManager.get_ball().get_pos(), TEAM_COLOR_MAP["Team Orange"]
+                        MatchStats.get_last_player_touch_by_team("Team Orange"), BallManager.get_ball().get_pos()
                     )
                 elif ball_pos_x > FIELD_RIGHT_EDGE:
                     # goal left team
                     MatchStats.register_goal("Team Blue")
                     GoalExplosionManager.summon_goal_explosion(
-                        BallManager.get_ball().get_pos(), TEAM_COLOR_MAP["Team Blue"]
+                        MatchStats.get_last_player_touch_by_team("Team Blue"), BallManager.get_ball().get_pos()
                     )
                 HUD.update_score()
                 MatchStats.reset_aftergoal_time()

@@ -1,4 +1,5 @@
 import random
+from typing import Literal
 import pygame
 import PygameXtras as px
 from .player_stats import PlayerStats
@@ -43,6 +44,9 @@ class MatchStats:
         assert state in ["game", "aftergoal"]
         MatchStats.__state = state
 
+    def get_last_player_touch_by_team(team: Literal["Team Blue", "Team Orange"]):
+        return MatchStats.__last_touches_dict[team]
+
     def get_state():
         return MatchStats.__state
 
@@ -52,7 +56,10 @@ class MatchStats:
     def start_match(players):
         MatchStats.__goals_team_blue = 0
         MatchStats.__goals_team_orange = 0
-        MatchStats.__last_touches_dict.clear()
+        MatchStats.__last_touches_dict = {
+            "Team Blue": None,
+            "Team Orange": None
+        }
         MatchStats.__last_shot_by = None
         MatchStats.__match_time_left = MATCH_DURATION_IN_SECONDS
         MatchStats.__last_touches_list.clear()

@@ -19,6 +19,15 @@ class PlayerConfigManager:
         return PlayerConfigManager.__players
 
     @staticmethod
+    def get_by_name(name: str):
+        player = [p for p in PlayerConfigManager.__players if p.name == name]
+        if len(player) > 1:
+            raise Exception(f"multiple players with name {name}")
+        elif len(player) == 0:
+            raise Exception(f"no player with name {name} found")
+        return player[0]
+
+    @staticmethod
     def get_by_controller(controller_index: int, controller_side: str):
         for p in PlayerConfigManager.__players:
             if (

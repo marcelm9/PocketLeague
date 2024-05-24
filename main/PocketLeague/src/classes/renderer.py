@@ -3,7 +3,7 @@ import pygame
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
 from .field import Field
-from .goal_explosion_manager import GoalExplosionManager
+from .goal_explosions.goal_explosion_manager import GoalExplosionManager
 from .HUD import HUD
 from .match_stats import MatchStats
 from .player_manager import PlayerManager

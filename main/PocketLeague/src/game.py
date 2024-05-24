@@ -1,5 +1,7 @@
 import pygame
 
+from .classes.goal_explosions.goal_explosion_manager import GoalExplosionManager
+
 from .classes.boost_pads_manager import BoostPadsManager
 from .classes.field import Field
 from .classes.HUD import HUD
@@ -84,5 +86,6 @@ class Game:
         HUD.reset()
         MatchStats.reset()
         BoostPadsManager.reset()
+        GoalExplosionManager.reset()
 
         return return_value
