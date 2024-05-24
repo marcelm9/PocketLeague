@@ -46,7 +46,7 @@ class DragonGoalExplosion:
                 self.__position[1] - self.__pos_y_difference,
             ),
             (0, 0),
-            (0, 0, 139),
+            (0, 0, 255),
             0.7,
             self.__radius,
             0,
@@ -64,7 +64,7 @@ class DragonGoalExplosion:
         )
         pygame.draw.circle(
             surface,
-            (0, 0, 139),
+            (0, 0, 255),
             (
                 self.__position[0] + self.__pos_x_difference,
                 self.__position[1] - self.__pos_y_difference,

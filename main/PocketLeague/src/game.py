@@ -1,9 +1,9 @@
 import pygame
 
-from .classes.goal_explosions.goal_explosion_manager import GoalExplosionManager
-
+from .classes.ball_manager import BallManager
 from .classes.boost_pads_manager import BoostPadsManager
 from .classes.field import Field
+from .classes.goal_explosions.goal_explosion_manager import GoalExplosionManager
 from .classes.HUD import HUD
 from .classes.match_stats import MatchStats
 from .classes.player_config_manager import PlayerConfigManager
@@ -20,20 +20,15 @@ class Game:
     screen: pygame.Surface = None
     fpsclock: pygame.time.Clock = None
 
-    def init(screen: pygame.Surface):
+    def init(screen: pygame.Surface, fpsclock: pygame.time.Clock):
         Game.screen = screen
-        Game.fpsclock = pygame.time.Clock()
-
-    def debug():
-        Game.init(
-            pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), display=0, flags = pygame.FULLSCREEN | pygame.SCALED)
-        )
-        PlayerConfigManager._use_debug_configs()
-        Game.start()
+        Game.fpsclock = fpsclock
 
     def __configure():
         if len(PlayerConfigManager.get_player_configs()) < 2:
-            raise Exception(f"At least two players have to be registered (currently {len(PlayerConfigManager.get_player_configs())})")
+            raise Exception(
+                f"At least two players have to be registered (currently {len(PlayerConfigManager.get_player_configs())})"
+            )
 
         for cfg in PlayerConfigManager.get_player_configs():
             PlayerManager.summon_player(
@@ -43,39 +38,37 @@ class Game:
                 cfg.boost_type,
                 cfg.goal_explosion,
                 cfg.controller_id,
-                cfg.controller_side
+                cfg.controller_side,
             )
 
         Field.init()
 
     def start():
-        
+
         if Game.screen is None:
-            Game.init(
-                pygame.display.get_surface()
-            )
+            Game.init(pygame.display.get_surface())
 
         Space.init(MatchStats.handle_player_ball_collision)
         Game.__configure()
         Updater.init(Game.fpsclock)
         AfterMatchScreen.init(Game.fpsclock, Game.screen)
         Renderer.init(Game.screen)
-        HUD.init(Game.screen)
         MatchStats.start_match(PlayerManager.get_players())
+        HUD.init(Game.screen)
         PlayerManager.respawn_players()
         HUD.update_time_display()
         BoostPadsManager.init()
+        BallManager.create_ball()
 
         while True:
-            
+
             if (return_value := Updater.update()) != None:
                 break
             Renderer.render()
-            
+
             pygame.display.flip()
             # pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")
 
-        
         # reset everything
         Space.reset()
         PlayerManager.reset()
@@ -84,8 +77,8 @@ class Game:
         Renderer.reset()
         AfterMatchScreen.reset()
         HUD.reset()
-        MatchStats.reset()
         BoostPadsManager.reset()
         GoalExplosionManager.reset()
+        BallManager.destroy_ball()
 
         return return_value

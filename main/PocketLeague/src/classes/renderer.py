@@ -29,8 +29,10 @@ class Renderer:
         ParticleManager.draw(Renderer.screen)
         BoostPadsManager.draw(Renderer.screen)
 
-        if MatchStats.get_state() != "aftergoal":
+        if MatchStats.get_state() == "game" or MatchStats.get_state() == "overtime":
             BallManager.get_ball().draw(Renderer.screen)
+        else:
+            MatchStats.get_goal_label().draw_to(Renderer.screen)
 
         GoalExplosionManager.draw(Renderer.screen)
         PlayerManager.draw(Renderer.screen)

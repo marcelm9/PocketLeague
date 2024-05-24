@@ -1,35 +1,47 @@
 import random
 from typing import Literal
+
 import pygame
 import PygameXtras as px
-from .player_stats import PlayerStats
+
 from ..files.config import (
+    AFTER_GOAL_SECONDS,
+    DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED,
     MATCH_COUNTDOWN,
     MATCH_DURATION_IN_SECONDS,
+    TEAM_COLOR_MAP,
     WIN_WIDTH,
-    DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED,
-    AFTER_GOAL_SECONDS
 )
-
-from .field import Field
-
 from .ball_manager import BallManager
+from .field import Field
+from .player_stats import PlayerStats
 
 
 class MatchStats:
 
     __match_time_left: float
     __countdown: float = 0
-    __goals_team_blue: int = 0
-    __goals_team_orange: int = 0
+    __goals_team_blue: int
+    __goals_team_orange: int
     __player_stats: dict[str, PlayerStats] = {}
     __last_touches_dict: dict[str, str] = {}
     __last_shot_by = None
-    __last_touches_list: list[str] = [] # oldest touch ... newest touch
+    __last_touches_list: list[str] = []  # oldest touch ... newest touch
     __player_team_map: dict[str, str]
 
-    __state = "game" # game, aftergoal
+    __state: Literal["game", "aftergoal", "overtime", "aftergoal_ot"] = "game"
     __aftergoal_time = 0
+
+    __overtime: float = 0
+
+    __goal_label = px.Label(None, "", 140, (WIN_WIDTH // 2, 220), "midtop", f="Comic Sans")
+
+    def get_goal_label():
+        return MatchStats.__goal_label
+
+    def update_goal_label(team: Literal["Team Blue", "Team Orange"], player_name: str):
+        MatchStats.__goal_label.update_colors(textcolor=TEAM_COLOR_MAP[team])
+        MatchStats.__goal_label.update_text(f"{player_name} scored!")
 
     def reset_aftergoal_time():
         MatchStats.__aftergoal_time = AFTER_GOAL_SECONDS
@@ -41,7 +53,7 @@ class MatchStats:
         MatchStats.__aftergoal_time = max(MatchStats.__aftergoal_time - dt, 0)
 
     def set_state(state: str):
-        assert state in ["game", "aftergoal"]
+        assert state in ["game", "aftergoal", "overtime", "aftergoal_ot"]
         MatchStats.__state = state
 
     def get_last_player_touch_by_team(team: Literal["Team Blue", "Team Orange"]):
@@ -56,15 +68,16 @@ class MatchStats:
     def start_match(players):
         MatchStats.__goals_team_blue = 0
         MatchStats.__goals_team_orange = 0
-        MatchStats.__last_touches_dict = {
-            "Team Blue": None,
-            "Team Orange": None
-        }
         MatchStats.__last_shot_by = None
-        MatchStats.__match_time_left = MATCH_DURATION_IN_SECONDS
+        MatchStats.__last_touches_dict = {
+            "Team Blue": "Team Blue",
+            "Team Orange": "Team Orange",
+        }
         MatchStats.__last_touches_list.clear()
+        MatchStats.__match_time_left = MATCH_DURATION_IN_SECONDS
         MatchStats.__player_team_map = {
-            p: t for p, t in [
+            p: t
+            for p, t in [
                 (player_.get_name(), player_.get_team()) for player_ in players
             ]
         }
@@ -82,21 +95,23 @@ class MatchStats:
     def get_match_seconds_left():
         return MatchStats.__match_time_left
 
-    def reduce_match_time(dt: float):
-        MatchStats.__match_time_left = max(MatchStats.__match_time_left - dt, 0)
+    def reduce_match_time(dt_s: float):
+        MatchStats.__match_time_left = max(MatchStats.__match_time_left - dt_s, 0)
 
-    def reduce_countdown(dt: float):
-        MatchStats.__countdown = max(MatchStats.__countdown - dt, 0)
+    def reduce_countdown(dt_s: float):
+        MatchStats.__countdown = max(MatchStats.__countdown - dt_s, 0)
+
+    def increase_overtime(dt_s):
+        MatchStats.__overtime += dt_s
+
+    def get_overtime_seconds():
+        return MatchStats.__overtime
 
     def get_countdown():
         return MatchStats.__countdown
 
     def start_countdown():
         MatchStats.__countdown = MATCH_COUNTDOWN
-
-    def reset():
-        MatchStats.__goals_team_blue = 0
-        MatchStats.__goals_team_orange = 0
 
     def get_player_stats() -> dict[str, PlayerStats]:
         return MatchStats.__player_stats
@@ -106,24 +121,42 @@ class MatchStats:
 
         if team_name == "Team Blue":
             MatchStats.__goals_team_blue += 1
-            if MatchStats.__last_touches_dict.get("Team Blue", None) is not None:
-                MatchStats.__player_stats[MatchStats.__last_touches_dict["Team Blue"]].goals += 1
-            
+            if MatchStats.__last_touches_dict["Team Blue"] != "Team Blue":
+                MatchStats.__player_stats[
+                    MatchStats.__last_touches_dict["Team Blue"]
+                ].goals += 1
+
                 # if there is a player of the blue team in the last three touches, award an assist
                 for name in MatchStats.__last_touches_list[::-1]:
-                    if name != MatchStats.__last_touches_dict["Team Blue"] and MatchStats.__player_team_map[name] == "Team Blue":
+                    if (
+                        name != MatchStats.__last_touches_dict["Team Blue"]
+                        and MatchStats.__player_team_map[name] == "Team Blue"
+                    ):
                         MatchStats.__player_stats[name].assists += 1
                         break
         elif team_name == "Team Orange":
             MatchStats.__goals_team_orange += 1
-            if MatchStats.__last_touches_dict.get("Team Orange", None) is not None:
-                MatchStats.__player_stats[MatchStats.__last_touches_dict["Team Orange"]].goals += 1
-            
+            if MatchStats.__last_touches_dict["Team Orange"] != "Team Orange":
+                MatchStats.__player_stats[
+                    MatchStats.__last_touches_dict["Team Orange"]
+                ].goals += 1
+
                 # if there is a player of the orangeteam in the last three touches, award an assist
                 for name in MatchStats.__last_touches_list[::-1]:
-                    if name != MatchStats.__last_touches_dict["Team Orange"] and MatchStats.__player_team_map[name] == "Team Orange":
+                    if (
+                        name != MatchStats.__last_touches_dict["Team Orange"]
+                        and MatchStats.__player_team_map[name] == "Team Orange"
+                    ):
                         MatchStats.__player_stats[name].assists += 1
                         break
+
+    def reset_tracking_stats():
+        MatchStats.__last_shot_by = None
+        MatchStats.__last_touches_dict = {
+            "Team Blue": "Team Blue",
+            "Team Orange": "Team Orange",
+        }
+        MatchStats.__last_touches_list.clear()
 
     def handle_player_ball_collision(arbiter, space, data):
         player = data["player"]

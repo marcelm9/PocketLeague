@@ -22,6 +22,7 @@ class Menu:
     ControllerManager.init(screen, fpsclock)
     ControllerManager.enough_controllers()
     ControllerManager.declare_controllers()
+    Game.init(screen, fpsclock)
 
     def start():
 
@@ -204,7 +205,7 @@ class Menu:
             if current_index == 0 and keys[0]:
                 return
             elif current_index == 4 and keys[0]:
-                while (Game.start() == "run"):
+                while Game.start() == "run":
                     pass
                 return
 

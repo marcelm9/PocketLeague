@@ -34,10 +34,10 @@ class HUD:
         HUD.screen = screen
         positions = [
             # label position, label anchor, boost_display offset
-            ((10, 10), "topleft", (225, 0)),
-            ((screen.get_width() - 10, 10), "topright", (-225, 0)),
-            ((10, screen.get_height() - 10), "bottomleft", (225, 0)),
-            ((screen.get_width() - 10, screen.get_height() - 10), "bottomright", (-225, 0)),
+            ((10, 10), "topleft", (250, 0)),
+            ((screen.get_width() - 10, 10), "topright", (-250, 0)),
+            ((10, screen.get_height() - 10), "bottomleft", (250, 0)),
+            ((screen.get_width() - 10, screen.get_height() - 10), "bottomright", (-250, 0)),
         ]
         for i, player in enumerate(PlayerManager.get_players()):
             HUD.labels.append(
@@ -124,8 +124,12 @@ class HUD:
         HUD.team_orange_goal_label.update_text(MatchStats.get_goals_team_orange())
 
     def update_time_display():
-        m, s = int(MatchStats.get_match_seconds_left() // 60), int(MatchStats.get_match_seconds_left() % 60)
-        HUD.time_label.update_text(f"{m}:{s:02}")
+        if MatchStats.get_state() == "game":
+            m, s = int(MatchStats.get_match_seconds_left() // 60), int(MatchStats.get_match_seconds_left() % 60)
+            HUD.time_label.update_text(f"{m}:{s:02}")
+        elif MatchStats.get_state() == "overtime":
+            m, s = int(MatchStats.get_overtime_seconds() // 60), int(MatchStats.get_overtime_seconds() % 60)
+            HUD.time_label.update_text(f"+{m}:{s:02}")
 
     def update():
         HUD.update_time_display()

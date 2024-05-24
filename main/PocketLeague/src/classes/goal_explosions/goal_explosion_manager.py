@@ -12,6 +12,14 @@ class GoalExplosionManager:
     __explosions: list[RegularGoalExplosion] = []
 
     def summon_goal_explosion(player_name, pos):
+        if player_name in ["Team Blue", "Team Orange"]:
+            GoalExplosionManager.__explosions.append(
+                RegularGoalExplosion(
+                    position=pos, color=TEAM_COLOR_MAP[player_name]
+                )
+            )
+            return
+
         player_config = PlayerConfigManager.get_by_name(player_name)
         match player_config.goal_explosion:
             case "regular":
