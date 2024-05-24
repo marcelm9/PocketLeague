@@ -1,16 +1,17 @@
 import pygame
 
+from ..files.config import (FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FPS,
+                            TEAM_COLOR_MAP)
 from ..ui.after_match_screen import AfterMatchScreen
-
-from .player_manager import PlayerManager
-
-from .boost_pads_manager import BoostPadsManager
-
-from ..files.config import FPS, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE
 from .ball_manager import BallManager
-from .space import Space
-from .match_stats import MatchStats
+from .boost_pads_manager import BoostPadsManager
+from .field import Field
+from .goal_explosion_manager import GoalExplosionManager
 from .HUD import HUD
+from .match_stats import MatchStats
+from .player_manager import PlayerManager
+from .space import Space
+
 
 class Updater:
 
@@ -43,7 +44,7 @@ class Updater:
                     BallManager.reset_ball()
                 elif event.key == pygame.K_SPACE:
                     MatchStats._finish_game()
-        
+
         HUD.update()
 
         if MatchStats.get_countdown() > 0:
@@ -59,6 +60,7 @@ class Updater:
         Space.space.step(dt)
         PlayerManager.keep_in_bounds()
         BoostPadsManager.update()
+        GoalExplosionManager.update(dt_s)
 
         if MatchStats.get_match_seconds_left() == 0:
             if BallManager.get_ball().get_speed() < 0.05:
@@ -71,13 +73,19 @@ class Updater:
                 if ball_pos_x < FIELD_LEFT_EDGE:
                     # goal right team
                     MatchStats.register_goal("Team Orange")
+                    GoalExplosionManager.summon_goal_explosion(
+                        BallManager.get_ball().get_pos(), TEAM_COLOR_MAP["Team Orange"]
+                    )
                 elif ball_pos_x > FIELD_RIGHT_EDGE:
                     # goal left team
                     MatchStats.register_goal("Team Blue")
+                    GoalExplosionManager.summon_goal_explosion(
+                        BallManager.get_ball().get_pos(), TEAM_COLOR_MAP["Team Blue"]
+                    )
                 HUD.update_score()
                 MatchStats.reset_aftergoal_time()
                 MatchStats.set_state("aftergoal")
-        
+
         elif state == "aftergoal":
             MatchStats.reduce_aftergoal_time(dt_s)
             if MatchStats.get_aftergoal_time() == 0:
