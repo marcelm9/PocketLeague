@@ -1,5 +1,7 @@
 import pygame
 
+from .particle_manager import ParticleManager
+
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
 from .field import Field
@@ -24,11 +26,10 @@ class Renderer:
         for line in Field.get_lines():
             line.draw(Renderer.screen)
 
+        if MatchStats.get_state() != "aftergoal":
+            BallManager.get_ball().draw(Renderer.screen)
         PlayerManager.draw(Renderer.screen)
         BoostPadsManager.draw(Renderer.screen)
         GoalExplosionManager.draw(Renderer.screen)
-
-        if MatchStats.get_state() != "aftergoal":
-            BallManager.get_ball().draw(Renderer.screen)
-
+        ParticleManager.draw(Renderer.screen)
         HUD.draw()
