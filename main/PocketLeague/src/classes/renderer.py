@@ -1,5 +1,7 @@
 import pygame
 
+from .match_stats import MatchStats
+
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
 from .field import Field
@@ -25,6 +27,8 @@ class Renderer:
 
         PlayerManager.draw(Renderer.screen)
         BoostPadsManager.draw(Renderer.screen)
-        BallManager.get_ball().draw(Renderer.screen)
+
+        if MatchStats.get_state() != "aftergoal":
+            BallManager.get_ball().draw(Renderer.screen)
 
         HUD.draw()
