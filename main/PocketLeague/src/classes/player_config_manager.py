@@ -72,9 +72,9 @@ class PlayerConfigManager:
 
     def _use_debug_configs():
         PlayerConfigManager.__players = [
-            PlayerConfig("Marcel", "Team Blue", "red", "regular", "regular", 0, "left"),
+            PlayerConfig("Marcel", "Team Blue", "red", "red", "regular", 0, "left"),
             PlayerConfig(
-                "Pascal", "Team Orange", "azure", "regular", "regular", 0, "right"
+                "Pascal", "Team Orange", "azure", "yellow", "dragons", 0, "right"
             ),
         ]
         print("Using debug player configs")

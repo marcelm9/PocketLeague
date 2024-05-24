@@ -1,6 +1,9 @@
+import random
 import pygame
 import PygameXtras as px
 import pymunk
+
+from .particle_manager import ParticleManager
 
 from ..files.config import *
 from .ball_manager import BallManager
@@ -17,7 +20,7 @@ class Player:
         # controller input
         self.__controller_index = None
         self.__controller: px.PlayStationController = None
-        self.__joystick: int = None # 0 for left, 1 for right
+        self.__joystick: int = None  # 0 for left, 1 for right
         self.__boost_button = None
         self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
 
@@ -116,7 +119,7 @@ class Player:
         self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
 
     def set_boost_type(self, boost_type: str):
-        pass
+        self.__boost_color = COLOR_MAP[boost_type]
 
     def set_color(self, color):
         self.__color = COLOR_MAP[color]
@@ -158,6 +161,14 @@ class Player:
             if self.get_input_for_boost() and self.__boost > 0:
                 max_length = PLAYER_MAX_SPEED_WHEN_BOOSTING
                 self.__boost = max(0, self.__boost - dt_s)
+                ParticleManager.create_particle(
+                    self.get_pos(),
+                    (-inp[0] * random.random() * 3, -inp[1] * random.random() * 3),
+                    self.__boost_color,
+                    0.6,
+                    9,
+                    0,
+                )
             else:
                 max_length = PLAYER_MAX_SPEED
             inp.scale_to_length(min(max_length, inp.length() * max_length))

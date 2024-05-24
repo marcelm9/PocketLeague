@@ -58,9 +58,7 @@ NAMES = [
     "GoatRice"
 ]
 TEAM_NAMES = ["Team Blue", "Team Orange"]
-BOOST_TYPES = [
-    "regular"
-]
+BOOST_TYPES = list(COLOR_MAP.keys())
 GOAL_EXPLOSION_TYPES = [
     "regular",
     "dragons"

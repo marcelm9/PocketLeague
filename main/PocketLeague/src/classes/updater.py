@@ -1,4 +1,7 @@
+import random
 import pygame
+
+from .particle_manager import ParticleManager
 
 from ..files.config import (FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FPS,
                             TEAM_COLOR_MAP)
@@ -44,6 +47,27 @@ class Updater:
                     BallManager.reset_ball()
                 elif event.key == pygame.K_SPACE:
                     MatchStats._finish_game()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 3:
+                    ParticleManager.create_explosion(
+                        pygame.mouse.get_pos(),
+                        300,
+                        3,
+                        (255, 0, 0),
+                        2,
+                        5
+                    )
+
+        
+        if pygame.mouse.get_pressed()[0]:
+            ParticleManager.create_particle(
+                pygame.mouse.get_pos(),
+                (random.random() * 3 - 1.5, random.random() * -3),
+                (255, 204, 0),
+                2,
+                4,
+                0
+            )
 
         HUD.update()
 
@@ -61,6 +85,7 @@ class Updater:
         PlayerManager.keep_in_bounds()
         BoostPadsManager.update()
         GoalExplosionManager.update(dt_s)
+        ParticleManager.update(dt_s)
 
         if MatchStats.get_match_seconds_left() == 0:
             if BallManager.get_ball().get_speed() < 0.05:
@@ -94,3 +119,4 @@ class Updater:
                 BoostPadsManager.reset_pads()
                 MatchStats.set_state("game")
                 MatchStats.start_countdown()
+                ParticleManager.clear()

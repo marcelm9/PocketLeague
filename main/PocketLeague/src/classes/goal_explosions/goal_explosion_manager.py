@@ -25,7 +25,7 @@ class GoalExplosionManager:
             direction_factor = {"Team Blue": -1, "Team Orange": 1}[player_config.team]
             GoalExplosionManager.__explosions.append(
                 DragonGoalExplosion(
-                    position=pos, direction_factor=direction_factor, duration=2.5, distance=700
+                    position=pos, direction_factor=direction_factor, duration=2, distance=700
                 )
             )
 
