@@ -25,9 +25,11 @@ class Renderer:
         Renderer.screen.fill((0, 0, 0))
         for line in Field.get_lines():
             line.draw(Renderer.screen)
+        for line in Field.get_goal_lines():
+            line.draw(Renderer.screen)
 
-        ParticleManager.draw(Renderer.screen)
         BoostPadsManager.draw(Renderer.screen)
+        ParticleManager.draw(Renderer.screen)
 
         if MatchStats.get_state() == "game" or MatchStats.get_state() == "overtime":
             BallManager.get_ball().draw(Renderer.screen)

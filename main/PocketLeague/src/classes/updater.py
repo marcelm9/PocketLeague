@@ -45,6 +45,8 @@ class Updater:
                     BallManager.reset_ball()
                 elif event.key == pygame.K_SPACE:
                     MatchStats._finish_game()
+                elif event.key == pygame.K_RETURN:
+                    print(f"{Updater.__fpsclock.get_fps() = }")
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 3:
                     ParticleManager.create_explosion(
@@ -62,6 +64,8 @@ class Updater:
             )
 
         HUD.update()
+        BoostPadsManager.update(dt_s)
+        ParticleManager.update(dt_s)
 
         if MatchStats.get_countdown() > 0:
             return
@@ -77,9 +81,7 @@ class Updater:
         BallManager.get_ball().update()
         Space.space.step(dt)
         PlayerManager.keep_in_bounds()
-        BoostPadsManager.update()
         GoalExplosionManager.update(dt_s)
-        ParticleManager.update(dt_s)
 
         if (
             MatchStats.get_state() == "game"

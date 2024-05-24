@@ -8,6 +8,7 @@ from .space import Space
 class Field:
 
     lines: list[Line] = []
+    goal_lines: list[Line] = [] # goal lines should be drawn on top of regular lines
 
     __rl: pygame.Rect # rect left
     __rc: pygame.Rect # rect center
@@ -80,18 +81,28 @@ class Field:
             goal_line = False
             if start[0] < rc.left or end[0] < rc.left:
                 color = TEAM_COLOR_MAP["Team Blue"]
+                goal_line = True
             elif start[0] > rc.right or end[0] > rc.right:
                 color = TEAM_COLOR_MAP["Team Orange"]
+                goal_line = True
             else:
                 color = (255,255,255)
-            Field.lines.append(
-                Line(start, end, vector, color)
-            )
+            if goal_line:
+                Field.goal_lines.append(
+                    Line(start, end, vector, color)
+                )
+            else:
+                Field.lines.append(
+                    Line(start, end, vector, color)
+                )
 
         Space.space.add(wall, *wall_shapes)
 
     def get_lines():
         return Field.lines
+    
+    def get_goal_lines():
+        return Field.goal_lines
 
     def get_blue_goal_line():
         return (Field.__rl.topright, Field.__rl.bottomright)

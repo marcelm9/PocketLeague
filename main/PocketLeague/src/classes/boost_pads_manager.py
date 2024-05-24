@@ -16,9 +16,9 @@ class BoostPadsManager:
         for pad in BoostPadsManager.__pads:
             pad.reset()
 
-    def update():
+    def update(dt_s):
         for pad in BoostPadsManager.__pads:
-            pad.update()
+            pad.update(dt_s)
 
     def draw(surface):
         for pad in BoostPadsManager.__pads:

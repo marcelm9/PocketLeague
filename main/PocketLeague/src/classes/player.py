@@ -93,7 +93,7 @@ class Player:
         return self.__team
 
     def keep_in_bounds(self):
-        for line in Field.get_lines():
+        for line in Field.get_lines() + Field.get_goal_lines():
             if Collisions.lineCircle(
                 line.pos1, line.pos2, self.__body.position, self.__radius
             ):
