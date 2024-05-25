@@ -12,6 +12,7 @@ from .HUD import HUD
 from .match_stats import MatchStats
 from .particle_manager import ParticleManager
 from .player_manager import PlayerManager
+from .sounds import Sounds
 from .space import Space
 
 
@@ -50,6 +51,7 @@ class Updater:
                     MatchStats.start_countdown()
                     ParticleManager.clear()
                     MatchStats.reset_tracking_stats()
+                    Sounds.stop_all_boost_sounds()
                 elif event.key == pygame.K_SPACE:
                     MatchStats._finish_game()
                 elif event.key == pygame.K_RETURN:
@@ -109,6 +111,7 @@ class Updater:
                     BoostPadsManager.reset_pads()
                     MatchStats.start_countdown()
                     ParticleManager.clear()
+                    Sounds.stop_all_boost_sounds()
                     return
 
         if state == "game" or state == "overtime":
@@ -159,5 +162,7 @@ class Updater:
                     MatchStats.start_countdown()
                     ParticleManager.clear()
                     MatchStats.reset_tracking_stats()
+                    Sounds.stop_all_boost_sounds()
                 elif MatchStats.get_state() == "aftergoal_ot":
+                    Sounds.stop_all_boost_sounds()
                     return AfterMatchScreen.show()

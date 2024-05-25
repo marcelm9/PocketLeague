@@ -9,6 +9,7 @@ from .classes.match_stats import MatchStats
 from .classes.player_config_manager import PlayerConfigManager
 from .classes.player_manager import PlayerManager
 from .classes.renderer import Renderer
+from .classes.sounds import Sounds
 from .classes.space import Space
 from .classes.updater import Updater
 from .files.config import *
@@ -77,5 +78,6 @@ class Game:
         GoalExplosionManager.reset()
         BallManager.destroy_ball()
         MatchStats.reset()
+        Sounds.reset()
 
         return return_value

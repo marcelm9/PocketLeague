@@ -1,14 +1,15 @@
 import random
+
 import pygame
 import PygameXtras as px
 import pymunk
-
-from .particle_manager import ParticleManager
 
 from ..files.config import *
 from .ball_manager import BallManager
 from .field import Field
 from .module_collisions import Collisions
+from .particle_manager import ParticleManager
+from .sounds import Sounds
 from .space import Space
 
 
@@ -169,8 +170,10 @@ class Player:
                     9,
                     0,
                 )
+                Sounds.start_boost(self.__name)
             else:
                 max_length = PLAYER_MAX_SPEED
+                Sounds.end_boost(self.__name)
             inp.scale_to_length(min(max_length, inp.length() * max_length))
             self.__current_speed = inp.length()
             self.__current_direction = inp.normalize()
