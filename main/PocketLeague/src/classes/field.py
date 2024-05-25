@@ -65,6 +65,7 @@ class Field:
             # for ball collision
             shape = pymunk.Segment(wall, tuple(start), tuple(end), FIELD_LINE_SIZE)
             shape.elasticity = 1
+            shape.filter = pymunk.ShapeFilter(mask=0b1)
             wall_shapes.append(shape)
 
             # for player collision
@@ -112,10 +113,7 @@ class Field:
     def get_orange_goal_center():
         return Field.__rr.midleft
 
-    def reset():
-            
+    def reset():            
         Field.lines.clear()
+        Field.goal_lines.clear()
 
-        Field.__rl = None
-        Field.__rc = None
-        Field.__rr = None

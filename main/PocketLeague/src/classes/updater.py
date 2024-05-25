@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from ..files.config import FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FPS
+from ..files.config import FIELD_BOTTOM_EDGE, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FIELD_TOP_EDGE, FPS, WIN_HEIGHT, WIN_WIDTH
 from ..ui.after_match_screen import AfterMatchScreen
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
@@ -43,6 +43,12 @@ class Updater:
                     exit()
                 elif event.key == pygame.K_r:
                     BallManager.reset_ball()
+                    PlayerManager.respawn_players()
+                    BoostPadsManager.reset_pads()
+                    MatchStats.set_state("game")
+                    MatchStats.start_countdown()
+                    ParticleManager.clear()
+                    MatchStats.reset_tracking_stats()
                 elif event.key == pygame.K_SPACE:
                     MatchStats._finish_game()
                 elif event.key == pygame.K_RETURN:
@@ -83,6 +89,8 @@ class Updater:
         PlayerManager.keep_in_bounds()
         GoalExplosionManager.update(dt_s)
 
+        # on very rare occasions, the ball is so fast that it sort of
+
         if (
             MatchStats.get_state() == "game"
             and MatchStats.get_match_seconds_left() == 0
@@ -104,9 +112,9 @@ class Updater:
 
         if state == "game" or state == "overtime":
             # check for goals
-            ball_pos_x = BallManager.get_ball().get_pos()[0]
+            ball_pos_x, ball_pos_y = BallManager.get_ball().get_pos()
             if ball_pos_x < FIELD_LEFT_EDGE or ball_pos_x > FIELD_RIGHT_EDGE:
-                if ball_pos_x < FIELD_LEFT_EDGE:
+                if ball_pos_x < FIELD_LEFT_EDGE and FIELD_BOTTOM_EDGE < ball_pos_y < FIELD_TOP_EDGE:
                     # goal right team
                     MatchStats.register_goal("Team Orange")
                     GoalExplosionManager.summon_goal_explosion(
@@ -114,7 +122,7 @@ class Updater:
                         BallManager.get_ball().get_pos(),
                     )
                     MatchStats.update_goal_label("Team Orange", MatchStats.get_last_player_touch_by_team("Team Orange"))
-                elif ball_pos_x > FIELD_RIGHT_EDGE:
+                elif ball_pos_x > FIELD_RIGHT_EDGE and FIELD_BOTTOM_EDGE < ball_pos_y < FIELD_TOP_EDGE:
                     # goal left team
                     MatchStats.register_goal("Team Blue")
                     GoalExplosionManager.summon_goal_explosion(

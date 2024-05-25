@@ -28,7 +28,7 @@ class Renderer:
         for line in Field.get_lines():
             line.draw(Renderer.screen)
         for line in Field.get_goal_lines():
-            line.draw(Renderer.screen)
+            line.draw(Renderer.screen, 2)
 
         BoostPadsManager.draw(Renderer.screen)
         ParticleManager.draw(Renderer.screen)

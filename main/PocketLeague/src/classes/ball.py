@@ -18,6 +18,7 @@ class Ball:
         self.__shape.density = 1
         self.__shape.elasticity = 1
         self.__shape.friction = 1
+        self.__shape.filter = pymunk.ShapeFilter(categories=0b1)
         Space.space.add(self.__body, self.__shape)
 
         self.__particles: list[Particle] = []
@@ -29,7 +30,7 @@ class Ball:
         self.__body.velocity *= 0.99
         self.__particles = [p for p in self.__particles if p.time_passed < p.duration]
         self.__particles.append(
-            Particle(list(self.get_pos()), (0, 0), BALL_COLOR, 0.1, BALL_RADIUS, 0)
+            Particle(list(self.get_pos()), (0, 0), BALL_COLOR, 0.09, BALL_RADIUS, 0)
         )
         for p in self.__particles:
             p.time_passed += dt_s
