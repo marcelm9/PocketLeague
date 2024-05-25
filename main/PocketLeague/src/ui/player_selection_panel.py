@@ -1,9 +1,9 @@
 import pygame
 import PygameXtras as px
 
-from ..classes.player_config import PlayerConfig
-
 from ..classes.controller_manager import ControllerManager
+from ..classes.player_config import PlayerConfig
+from ..classes.sounds import Sounds
 from ..files.colors import SOFT_WHITE
 from ..files.config import *
 
@@ -87,7 +87,9 @@ class PlayerSelectionPanel:
         self.__indexes[1] = self.__possible_values[1].index(player_config.team)
         self.__indexes[2] = self.__possible_values[2].index(player_config.color)
         self.__indexes[3] = self.__possible_values[3].index(player_config.boost_type)
-        self.__indexes[4] = self.__possible_values[4].index(player_config.goal_explosion)
+        self.__indexes[4] = self.__possible_values[4].index(
+            player_config.goal_explosion
+        )
         self.__active = True
         self.__update_labels()
 
@@ -126,20 +128,24 @@ class PlayerSelectionPanel:
 
         if self.__active:
             if keys[1]:
-                self.__current_index = max(0, self.__current_index - 1)
+                if self.__current_index > 0:
+                    self.__current_index -= 1
+                    Sounds.play("menu_button_press")
             elif keys[2]:
-                self.__current_index = min(
-                    len(self.__choice_labels) - 1, self.__current_index + 1
-                )
+                if self.__current_index < len(self.__choice_labels) - 1:
+                    self.__current_index += 1
+                    Sounds.play("menu_button_press")
             if keys[3]:
-                self.__indexes[self.__current_index] = max(
-                    0, self.__indexes[self.__current_index] - 1
-                )
+                if self.__indexes[self.__current_index] > 0:
+                    self.__indexes[self.__current_index] -= 1
+                    Sounds.play("menu_button_press")
             elif keys[4]:
-                self.__indexes[self.__current_index] = min(
-                    self.__max_indexes[self.__current_index],
-                    self.__indexes[self.__current_index] + 1,
-                )
+                if (
+                    self.__indexes[self.__current_index]
+                    < self.__max_indexes[self.__current_index]
+                ):
+                    self.__indexes[self.__current_index] += 1
+                    Sounds.play("menu_button_press")
 
             if keys[5]:
                 self.__active = False

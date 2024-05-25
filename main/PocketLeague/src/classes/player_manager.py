@@ -1,6 +1,8 @@
 import random
-from ..files.config import PLAYER_SPAWNS, CENTER
+
+from ..files.config import CENTER, PLAYER_SPAWNS
 from .player import Player
+from .sounds import Sounds
 
 
 class PlayerManager:
@@ -28,6 +30,7 @@ class PlayerManager:
         )
 
         PlayerManager.__players.append(p)
+        Sounds.add_player(name)
 
     @staticmethod
     def respawn_players():
@@ -40,16 +43,20 @@ class PlayerManager:
         for p in PlayerManager.__players:
             p.reset_boost()
             if p.get_team() == "Team Blue":
-                p.set_pos((
-                    CENTER[0] + spawns[blue_i][0],
-                    CENTER[1] + spawns[blue_i][1],
-                ))
+                p.set_pos(
+                    (
+                        CENTER[0] + spawns[blue_i][0],
+                        CENTER[1] + spawns[blue_i][1],
+                    )
+                )
                 blue_i += 1
             else:
-                p.set_pos((
-                    CENTER[0] + spawns[orange_i][0] * -1,
-                    CENTER[1] + spawns[orange_i][1] * -1,
-                ))
+                p.set_pos(
+                    (
+                        CENTER[0] + spawns[orange_i][0] * -1,
+                        CENTER[1] + spawns[orange_i][1] * -1,
+                    )
+                )
                 orange_i += 1
 
     @staticmethod

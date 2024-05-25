@@ -2,15 +2,17 @@ import random
 
 import pygame
 
-from ..files.config import FIELD_BOTTOM_EDGE, FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FIELD_TOP_EDGE, FPS, WIN_HEIGHT, WIN_WIDTH
+from ..files.config import FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FPS
 from ..ui.after_match_screen import AfterMatchScreen
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
+from .field import Field
 from .goal_explosions.goal_explosion_manager import GoalExplosionManager
 from .HUD import HUD
 from .match_stats import MatchStats
 from .particle_manager import ParticleManager
 from .player_manager import PlayerManager
+from .sounds import Sounds
 from .space import Space
 
 
@@ -49,6 +51,7 @@ class Updater:
                     MatchStats.start_countdown()
                     ParticleManager.clear()
                     MatchStats.reset_tracking_stats()
+                    Sounds.stop_all_boost_sounds()
                 elif event.key == pygame.K_SPACE:
                     MatchStats._finish_game()
                 elif event.key == pygame.K_RETURN:
@@ -108,28 +111,39 @@ class Updater:
                     BoostPadsManager.reset_pads()
                     MatchStats.start_countdown()
                     ParticleManager.clear()
+                    Sounds.stop_all_boost_sounds()
                     return
 
         if state == "game" or state == "overtime":
             # check for goals
             ball_pos_x, ball_pos_y = BallManager.get_ball().get_pos()
             if ball_pos_x < FIELD_LEFT_EDGE or ball_pos_x > FIELD_RIGHT_EDGE:
-                if ball_pos_x < FIELD_LEFT_EDGE and FIELD_BOTTOM_EDGE < ball_pos_y < FIELD_TOP_EDGE:
+                if ball_pos_x < FIELD_LEFT_EDGE and Field.rect_left.collidepoint(
+                    ball_pos_x, ball_pos_y
+                ):
                     # goal right team
                     MatchStats.register_goal("Team Orange")
                     GoalExplosionManager.summon_goal_explosion(
                         MatchStats.get_last_player_touch_by_team("Team Orange"),
                         BallManager.get_ball().get_pos(),
                     )
-                    MatchStats.update_goal_label("Team Orange", MatchStats.get_last_player_touch_by_team("Team Orange"))
-                elif ball_pos_x > FIELD_RIGHT_EDGE and FIELD_BOTTOM_EDGE < ball_pos_y < FIELD_TOP_EDGE:
+                    MatchStats.update_goal_label(
+                        "Team Orange",
+                        MatchStats.get_last_player_touch_by_team("Team Orange"),
+                    )
+                elif ball_pos_x > FIELD_RIGHT_EDGE and Field.rect_right.collidepoint(
+                    ball_pos_x, ball_pos_y
+                ):
                     # goal left team
                     MatchStats.register_goal("Team Blue")
                     GoalExplosionManager.summon_goal_explosion(
                         MatchStats.get_last_player_touch_by_team("Team Blue"),
                         BallManager.get_ball().get_pos(),
                     )
-                    MatchStats.update_goal_label("Team Blue", MatchStats.get_last_player_touch_by_team("Team Blue"))
+                    MatchStats.update_goal_label(
+                        "Team Blue",
+                        MatchStats.get_last_player_touch_by_team("Team Blue"),
+                    )
                 HUD.update_score()
                 MatchStats.reset_aftergoal_time()
                 if MatchStats.get_state() == "game":
@@ -148,5 +162,7 @@ class Updater:
                     MatchStats.start_countdown()
                     ParticleManager.clear()
                     MatchStats.reset_tracking_stats()
+                    Sounds.stop_all_boost_sounds()
                 elif MatchStats.get_state() == "aftergoal_ot":
+                    Sounds.stop_all_boost_sounds()
                     return AfterMatchScreen.show()

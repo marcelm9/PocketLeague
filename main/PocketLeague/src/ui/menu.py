@@ -4,6 +4,7 @@ from PygameXtras import PSVG
 
 from ..classes.controller_manager import ControllerManager
 from ..classes.player_config_manager import PlayerConfigManager
+from ..classes.sounds import Sounds
 from ..files.colors import DARK_BLUE, ERROR_LABEL_COLOR, SOFT_WHITE
 from ..files.config import *
 from ..game import Game
@@ -75,6 +76,7 @@ class Menu:
             keys = ControllerManager.get_pressed_by_everyone()
             if keys[3]:
                 if len(errors := PlayerConfigManager.get_errors()) == 0:
+                    Sounds.play("menu_button_press")
                     Menu.match_config()
                     error_labels.clear()
                 else:
@@ -91,6 +93,7 @@ class Menu:
                             )
                         )
             elif keys[1]:
+                Sounds.play("menu_button_press")
                 Menu.player_config()
                 error_labels.clear()
 
@@ -203,28 +206,36 @@ class Menu:
 
             keys = ControllerManager.get_pressed_by_everyone()
             if current_index == 0 and keys[0]:
+                Sounds.play("menu_button_press")
                 return
             elif current_index == 4 and keys[0]:
+                # no menu_button_press sound on start since it drowns the countdown sound
                 while Game.start() == "run":
                     pass
                 return
 
             elif keys[1]:
-                current_index = max(0, min(4, current_index - 1))
+                if current_index >= 1:
+                    current_index -= 1
+                    Sounds.play("menu_button_press")
             elif keys[2]:
-                current_index = max(0, min(4, current_index + 1))
+                if current_index <= 3:
+                    current_index += 1
+                    Sounds.play("menu_button_press")
             elif 1 <= current_index <= 3:
                 if keys[3]:
-                    value_indexes[current_index - 1] = max(
-                        0, value_indexes[current_index - 1] - 1
-                    )
-                    update_value_labels()
+                    if value_indexes[current_index - 1] >= 1:
+                        value_indexes[current_index - 1] -= 1
+                        Sounds.play("menu_button_press")
+                        update_value_labels()
                 elif keys[4]:
-                    value_indexes[current_index - 1] = min(
-                        value_indexes_max[current_index - 1],
-                        value_indexes[current_index - 1] + 1,
-                    )
-                    update_value_labels()
+                    if (
+                        value_indexes[current_index - 1]
+                        <= value_indexes_max[current_index - 1] - 1
+                    ):
+                        value_indexes[current_index - 1] += 1
+                        Sounds.play("menu_button_press")
+                        update_value_labels()
 
             for i, label in enumerate([back_button, *value_labels, confirm_button]):
                 if current_index == i:

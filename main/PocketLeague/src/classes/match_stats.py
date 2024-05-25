@@ -15,12 +15,14 @@ from ..files.config import (
 from .ball_manager import BallManager
 from .field import Field
 from .player_stats import PlayerStats
+from .sounds import Sounds
 
 
 class MatchStats:
 
     __match_time_left: float
     __countdown: float = 0
+    __countdown_last_integer: int = None
     __goals_team_blue: int
     __goals_team_orange: int
     __player_stats: dict[str, PlayerStats] = {}
@@ -34,7 +36,9 @@ class MatchStats:
 
     __overtime: float = 0
 
-    __goal_label = px.Label(None, "", 140, (WIN_WIDTH // 2, 180), "midtop", f="Comic Sans")
+    __goal_label = px.Label(
+        None, "", 140, (WIN_WIDTH // 2, 180), "midtop", f="Comic Sans"
+    )
 
     def reset():
         MatchStats.__state = "game"
@@ -104,6 +108,13 @@ class MatchStats:
 
     def reduce_countdown(dt_s: float):
         MatchStats.__countdown = max(MatchStats.__countdown - dt_s, 0)
+        if MatchStats.__countdown_last_integer == None or (
+            MatchStats.__countdown_last_integer > int(MatchStats.__countdown)
+        ):
+            MatchStats.__countdown_last_integer = int(MatchStats.__countdown)
+            Sounds.play("countdown")
+        if MatchStats.__countdown == 0:
+            Sounds.play("countdown_end")
 
     def increase_overtime(dt_s):
         MatchStats.__overtime += dt_s
@@ -116,6 +127,7 @@ class MatchStats:
 
     def start_countdown():
         MatchStats.__countdown = MATCH_COUNTDOWN
+        MatchStats.__countdown_last_integer = None
 
     def get_player_stats() -> dict[str, PlayerStats]:
         return MatchStats.__player_stats
@@ -153,6 +165,8 @@ class MatchStats:
                     ):
                         MatchStats.__player_stats[name].assists += 1
                         break
+
+        Sounds.play("goal")
 
     def reset_tracking_stats():
         MatchStats.__last_shot_by = None
@@ -219,6 +233,8 @@ class MatchStats:
             # shot for player
             MatchStats.__player_stats[player.get_name()].shots += 1
             MatchStats.__last_shot_by = player.get_team()
+
+        Sounds.play("ball_touch")
 
         return True
 
