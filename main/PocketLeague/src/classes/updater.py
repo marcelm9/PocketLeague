@@ -78,7 +78,7 @@ class Updater:
             MatchStats.increase_overtime(dt_s)
 
         PlayerManager.update(dt_s)
-        BallManager.get_ball().update()
+        BallManager.get_ball().update(dt_s)
         Space.space.step(dt)
         PlayerManager.keep_in_bounds()
         GoalExplosionManager.update(dt_s)
