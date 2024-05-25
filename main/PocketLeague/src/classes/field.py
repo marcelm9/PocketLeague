@@ -10,25 +10,21 @@ class Field:
     lines: list[Line] = []
     goal_lines: list[Line] = [] # goal lines should be drawn on top of regular lines
 
-    __rl: pygame.Rect # rect left
-    __rc: pygame.Rect # rect center
-    __rr: pygame.Rect # rect right
+    rect_center = pygame.Rect(0, 0, FIELD_WIDTH, FIELD_HEIGHT)
+    rect_center.center = CENTER
+    rect_left = pygame.Rect(0, 0, GOAL_DEPTH, GOAL_SIZE)
+    rect_left.midright = rect_center.midleft
+    rect_right = pygame.Rect(0, 0, GOAL_DEPTH, GOAL_SIZE)
+    rect_right.midleft = rect_center.midright
+
+    __rc: pygame.Rect = rect_center
+    __rl: pygame.Rect = rect_left
+    __rr: pygame.Rect = rect_right
 
     def init():
-        rect_center = pygame.Rect(0, 0, FIELD_WIDTH, FIELD_HEIGHT)
-        rect_center.center = CENTER
-        rect_left = pygame.Rect(0, 0, GOAL_DEPTH, GOAL_SIZE)
-        rect_left.midright = rect_center.midleft
-        rect_right = pygame.Rect(0, 0, GOAL_DEPTH, GOAL_SIZE)
-        rect_right.midleft = rect_center.midright
-
-        rc = rect_center
-        rl = rect_left
-        rr = rect_right
-
-        Field.__rc = rc
-        Field.__rl = rl
-        Field.__rr = rr
+        rc = Field.__rc
+        rl = Field.__rl
+        rr = Field.__rr
 
         center_ditch = 0
 

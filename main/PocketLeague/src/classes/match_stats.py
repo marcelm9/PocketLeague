@@ -34,7 +34,7 @@ class MatchStats:
 
     __overtime: float = 0
 
-    __goal_label = px.Label(None, "", 140, (WIN_WIDTH // 2, 220), "midtop", f="Comic Sans")
+    __goal_label = px.Label(None, "", 140, (WIN_WIDTH // 2, 180), "midtop", f="Comic Sans")
 
     def reset():
         MatchStats.__state = "game"
