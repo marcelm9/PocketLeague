@@ -8,7 +8,6 @@ from ..files.config import (
     AFTER_GOAL_SECONDS,
     DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED,
     MATCH_COUNTDOWN,
-    MATCH_DURATION_IN_SECONDS,
     TEAM_COLOR_MAP,
     WIN_WIDTH,
 )
@@ -73,7 +72,7 @@ class MatchStats:
     def _finish_game():
         MatchStats.__match_time_left = 1
 
-    def start_match(players):
+    def start_match(players, time: int):
         MatchStats.__goals_team_blue = 0
         MatchStats.__goals_team_orange = 0
         MatchStats.__last_shot_by = None
@@ -82,7 +81,7 @@ class MatchStats:
             "Team Orange": "Team Orange",
         }
         MatchStats.__last_touches_list.clear()
-        MatchStats.__match_time_left = MATCH_DURATION_IN_SECONDS
+        MatchStats.__match_time_left = time
         MatchStats.__player_team_map = {
             p: t
             for p, t in [

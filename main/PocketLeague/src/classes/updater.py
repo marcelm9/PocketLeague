@@ -19,10 +19,12 @@ from .space import Space
 class Updater:
 
     __fpsclock: pygame.time.Clock
+    __simulation_precision: int = 10
 
-    def init(fpsclock: pygame.time.Clock):
+    def init(fpsclock: pygame.time.Clock, simulation_precision: int):
         # needs to be passed in from Game, otherwise the first iteration of .tick is very large
         Updater.__fpsclock = fpsclock
+        Updater.__simulation_precision = simulation_precision
 
     def reset():
         Updater.__fpsclock = None
@@ -88,8 +90,8 @@ class Updater:
 
         PlayerManager.update(dt_s)
         BallManager.get_ball().update(dt_s)
-        small_step = dt / 10
-        for _ in range(10):
+        small_step = dt / Updater.__simulation_precision
+        for _ in range(Updater.__simulation_precision):
             Space.space.step(small_step)
         PlayerManager.keep_in_bounds()
         GoalExplosionManager.update(dt_s)

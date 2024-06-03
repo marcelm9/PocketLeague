@@ -23,7 +23,8 @@ class Player:
         self.__controller: px.PlayStationController = None
         self.__joystick: int = None  # 0 for left, 1 for right
         self.__boost_button = None
-        self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
+        self.__boost = BOOST_CAPACITY_MAP["regular"] * BOOST_PERCENT_ON_SPAWN
+        self.__max_boost = BOOST_CAPACITY_MAP["regular"]
 
         # stats
         self.__radius = PLAYER_OUTER_RADIUS
@@ -59,6 +60,9 @@ class Player:
 
     def get_boost(self):
         return self.__boost
+
+    def get_max_boost(self):
+        return self.__max_boost
 
     def get_color(self):
         return self.__color
@@ -114,10 +118,10 @@ class Player:
         self.__is_bot = True
 
     def recharge_boost(self):
-        self.__boost = PLAYER_BOOST_SECONDS
+        self.__boost = self.__max_boost
 
     def reset_boost(self):
-        self.__boost = PLAYER_BOOST_SECONDS_ON_SPAWN
+        self.__boost = self.__max_boost * BOOST_PERCENT_ON_SPAWN
 
     def set_boost_type(self, boost_type: str):
         self.__boost_color = COLOR_MAP[boost_type]
@@ -134,9 +138,6 @@ class Player:
         self.__boost_button = boost_button
         self.__controller = px.PlayStationController(self.__controller_index)
 
-    def set_goal_explosion(self, goal_explosion: str):
-        pass
-
     def set_name(self, name):
         self.__name = name
 
@@ -147,6 +148,9 @@ class Player:
         assert team in ("Team Blue", "Team Orange")
         self.__team = team
         self.__team_color = TEAM_COLOR_MAP[team]
+
+    def set_boost_capacity(self, boost_capacity: str):
+        self.__max_boost = BOOST_CAPACITY_MAP[boost_capacity]
 
     def update(self, dt_s, all_players: list):
         if self.__is_bot:

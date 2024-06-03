@@ -6,8 +6,8 @@ class BallManager:
     ball: Ball = None
 
     @staticmethod
-    def create_ball():
-        BallManager.ball = Ball()
+    def create_ball(ball_bounciness):
+        BallManager.ball = Ball(ball_bounciness)
 
     @staticmethod
     def destroy_ball():

@@ -1,13 +1,13 @@
 import pygame
 import pymunk
 
-from ..files.config import BALL_COLOR, BALL_RADIUS, BALL_SPAWN
+from ..files.config import BALL_COLOR, BALL_MAX_SPEED, BALL_RADIUS, BALL_SPAWN
 from .particle_manager import Particle
 from .space import Space
 
 
 class Ball:
-    def __init__(self):
+    def __init__(self, ball_bounciness):
         self.radius = BALL_RADIUS
 
         self.__body = pymunk.Body(body_type=pymunk.Body.DYNAMIC)
@@ -16,9 +16,20 @@ class Ball:
         self.__shape = pymunk.Circle(self.__body, radius=self.radius)
         self.__shape.collision_type = 0
         self.__shape.density = 1
-        self.__shape.elasticity = 1
+        self.__shape.elasticity = ball_bounciness
         self.__shape.friction = 1
         self.__shape.filter = pymunk.ShapeFilter(categories=0b1)
+
+        def limit_velocity(body, gravity, damping, dt):
+            vx, vy = body.velocity
+            speed = (vx ** 2 + vy ** 2) ** 0.5
+            if speed > BALL_MAX_SPEED:
+                scale = BALL_MAX_SPEED / speed
+                body.velocity = vx * scale, vy * scale
+
+        # Add velocity limiter to the ball
+        self.__body.velocity_func = limit_velocity
+
         Space.space.add(self.__body, self.__shape)
 
         self.__particles: list[Particle] = []

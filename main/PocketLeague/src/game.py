@@ -21,6 +21,11 @@ class Game:
     screen: pygame.Surface = None
     fpsclock: pygame.time.Clock = None
 
+    __map: str = "Regular map"
+    __time: int = 120
+    __ball_bounciness: float = 1
+    __boost_capacity: float = 1
+
     def init(screen: pygame.Surface, fpsclock: pygame.time.Clock):
         Game.screen = screen
         Game.fpsclock = fpsclock
@@ -37,25 +42,31 @@ class Game:
                 cfg.team,
                 cfg.color,
                 cfg.boost_type,
-                cfg.goal_explosion,
                 cfg.controller_id,
                 cfg.controller_side,
+                Game.__boost_capacity
             )
+
+    def set_settings(map: str, time: int, ball_bounciness: float, boost_capacity):
+        Game.__map = map
+        Game.__time = time
+        Game.__ball_bounciness = ball_bounciness
+        Game.__boost_capacity = boost_capacity
 
     def start():
 
         Space.init(MatchStats.handle_player_ball_collision)
         Game.__configure_players()
         Field.init()
-        Updater.init(Game.fpsclock)
+        Updater.init(Game.fpsclock, SIMULATION_PRECISION_MAP[Game.__ball_bounciness])
         AfterMatchScreen.init(Game.fpsclock, Game.screen)
         Renderer.init(Game.screen)
-        MatchStats.start_match(PlayerManager.get_players())
+        MatchStats.start_match(PlayerManager.get_players(), time=Game.__time)
         HUD.init(Game.screen)
         PlayerManager.respawn_players()
         HUD.update_time_display()
         BoostPadsManager.init()
-        BallManager.create_ball()
+        BallManager.create_ball(BALL_BOUNCINESS_MAP[Game.__ball_bounciness])
 
         while True:
 

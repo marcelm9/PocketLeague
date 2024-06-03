@@ -19,8 +19,7 @@ BALL_RADIUS = 12
 BALL_MAX_SPEED = 15
 BALL_COLOR = (255, 255, 255)
 BALL_SPAWN = CENTER
-PLAYER_BOOST_SECONDS = 1.5
-PLAYER_BOOST_SECONDS_ON_SPAWN = PLAYER_BOOST_SECONDS / 3
+BOOST_PERCENT_ON_SPAWN = 0.33
 PLAYER_BOOST_FACTOR = 1.8
 PLAYER_MAX_SPEED_WHEN_BOOSTING = PLAYER_MAX_SPEED * PLAYER_BOOST_FACTOR
 
@@ -30,10 +29,7 @@ FIELD_RIGHT_EDGE = WIN_WIDTH // 2 + FIELD_WIDTH // 2 + BALL_RADIUS
 FIELD_TOP_EDGE = WIN_HEIGHT // 2 - FIELD_HEIGHT // 2
 FIELD_BOTTOM_EDGE = WIN_HEIGHT // 2 + FIELD_HEIGHT // 2
 
-TEAM_COLOR_MAP = {
-    "Team Blue": (0, 0, 190),
-    "Team Orange": (255, 128, 0)
-}
+TEAM_COLOR_MAP = {"Team Blue": (0, 0, 190), "Team Orange": (255, 128, 0)}
 COLOR_MAP = {
     "red": (255, 0, 0),
     "yellow": (255, 255, 0),
@@ -49,14 +45,14 @@ COLOR_MAP = {
 COLOR_NAMES = list(COLOR_MAP.keys())
 COLOR_VALUES = list(COLOR_MAP.items())
 NAMES = [
-    "Lena", 
-    "Nahee", 
-    "Pascal", 
-    "Marcel", 
-    "Leninator99", 
-    "Nachodip03", 
-    "BlackRice_", 
-    "Golfmensch99", 
+    "Lena",
+    "Nahee",
+    "Pascal",
+    "Marcel",
+    "Leninator99",
+    "Nachodip03",
+    "BlackRice_",
+    "Golfmensch99",
     "GoatRice",
 ]
 TEAM_NAMES = ["Team Blue", "Team Orange"]
@@ -89,7 +85,6 @@ BALL_SPEED_REDUCTION_FACTOR = 0.99
 # vectors from center, for left side of field (right side is mirrored)
 PLAYER_SPAWNS = ((-500, -200), (-600, 0), (-500, 200))
 
-MATCH_DURATION_IN_SECONDS = 120
 MATCH_COUNTDOWN = 3
 
 BOOST_PAD_RECHARGE_TIME = 13
@@ -129,6 +124,30 @@ POINTS_WEIGHT_SHOT = 10
 POINTS_WEIGHT_SAVE = 50
 POINTS_WEIGHT_ASSIST = 75
 DISTANCE_FROM_GOAL_FOR_SHOT = 450
-DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED = DISTANCE_FROM_GOAL_FOR_SHOT ** 2
+DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED = DISTANCE_FROM_GOAL_FOR_SHOT**2
 
 AFTER_GOAL_SECONDS = 3
+
+# modifiers
+BALL_BOUNCINESS_MAP = {
+    "very low": 0.2,
+    "low": 0.5,
+    "regular": 1,
+    "high": 1.3,
+    "very high": 1.7,
+}
+SIMULATION_PRECISION_MAP = {
+    "very low": 10,
+    "low": 10,
+    "regular": 15,
+    "high": 25,
+    "very high": 100,
+}
+BOOST_CAPACITY_MAP = {  # in seconds
+    "off": 0,
+    "low": 0.75,
+    "regular": 1.5,
+    "high": 2,
+    "very high": 3,
+    "unlimited": 99999,
+}

@@ -117,7 +117,7 @@ class Menu:
 
     def match_config():
         labels = []
-        options = ("Map", "Duration (seconds)", "Boost allowed")
+        options = ("Map", "Duration (seconds)", "Ball bounciness", "Boost capacity")
         for i, text in enumerate(options):
             labels.append(
                 px.Label(
@@ -132,15 +132,17 @@ class Menu:
                 )
             )
 
+        # map, time, ball bounciness, boost capacity
         possible_values = [
             ["Default map"],
             [i for i in range(60, 301, 30)],
-            [True, False],
+            ["very low", "low", "regular", "high", "very high"],
+            ["off", "low", "regular", "high", "very high", "unlimited"],
         ]
         value_indexes_max = [
             len(possible_values[i]) - 1 for i in range(len(possible_values))
         ]
-        value_indexes = [0, 2, 0]  # default values
+        value_indexes = [0, 2, 2, 2]  # default values
 
         value_labels = []
         for i in range(len(options)):
@@ -179,11 +181,11 @@ class Menu:
             br=10,
         )
 
-        confirm_button = px.Label(
+        start_match_button = px.Label(
             Menu.screen,
-            "Confirm",
+            "Start match",
             40,
-            (1400, 730),
+            (1400, 800),
             f=HUD_FONT,
             tc=SOFT_WHITE,
             xad=20,
@@ -210,8 +212,14 @@ class Menu:
             if current_index == 0 and keys[0]:
                 Sounds.play("menu_button_press")
                 return
-            elif current_index == 4 and keys[0]:
+            elif current_index == len(options) + 1 and keys[0]:
                 # no menu_button_press sound on start since it drowns the countdown sound
+                Game.set_settings(
+                    map=possible_values[0][value_indexes[0]],
+                    time=possible_values[1][value_indexes[1]],
+                    ball_bounciness=possible_values[2][value_indexes[2]],
+                    boost_capacity=possible_values[3][value_indexes[3]],
+                )
                 while Game.start() == "run":
                     pass
                 return
@@ -221,10 +229,10 @@ class Menu:
                     current_index -= 1
                     Sounds.play("menu_button_press")
             elif keys[2]:
-                if current_index <= 3:
+                if current_index <= len(options):
                     current_index += 1
                     Sounds.play("menu_button_press")
-            elif 1 <= current_index <= 3:
+            elif 1 <= current_index <= len(options):
                 if keys[3]:
                     if value_indexes[current_index - 1] >= 1:
                         value_indexes[current_index - 1] -= 1
@@ -239,7 +247,7 @@ class Menu:
                         Sounds.play("menu_button_press")
                         update_value_labels()
 
-            for i, label in enumerate([back_button, *value_labels, confirm_button]):
+            for i, label in enumerate([back_button, *value_labels, start_match_button]):
                 if current_index == i:
                     label.update_borderwidth(3)
                 else:
@@ -249,7 +257,7 @@ class Menu:
             for label in labels + value_labels:
                 label.draw()
             back_button.draw()
-            confirm_button.draw()
+            start_match_button.draw()
 
             pygame.display.flip()
             Menu.fpsclock.tick(10)

@@ -15,16 +15,16 @@ class PlayerManager:
         team: str,
         color: str,
         boost_type: str,
-        goal_explosion: str,
         controller_index: int,
         controller_side: str,
+        boost_capacity: str
     ):
         p = Player()
         p.set_name(name)
         p.set_team(team)
         p.set_color(color)
         p.set_boost_type(boost_type)
-        p.set_goal_explosion(goal_explosion)
+        p.set_boost_capacity(boost_capacity)
         p.set_controller_input(
             controller_index, *({"left": (0, 9), "right": (1, 10)}[controller_side])
         )

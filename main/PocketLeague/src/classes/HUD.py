@@ -151,5 +151,5 @@ class HUD:
 
     def update_boosts():
         for i, player in enumerate(PlayerManager.get_players()):
-            HUD.boost_displays[i].update(player.get_boost())
+            HUD.boost_displays[i].update(player.get_boost(), player.get_max_boost())
 
