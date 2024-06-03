@@ -70,8 +70,10 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         exit()
-                    elif event.key == pygame.K_SPACE:
-                        PlayerConfigManager._use_debug_configs()
+                    elif event.key == pygame.K_2:
+                        PlayerConfigManager._use_debug_configs_2p()
+                    elif event.key == pygame.K_4:
+                        PlayerConfigManager._use_debug_configs_4p()
 
             keys = ControllerManager.get_pressed_by_everyone()
             if keys[3]:
@@ -307,6 +309,7 @@ class Menu:
                 active_panels = [p for p in panels if p.is_active()]
                 for p in active_panels:
                     PlayerConfigManager.add_player(p.get_player_config())
+                Sounds.play("menu_button_press")
                 return
 
             Menu.screen.fill(DARK_BLUE)

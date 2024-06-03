@@ -88,7 +88,9 @@ class Updater:
 
         PlayerManager.update(dt_s)
         BallManager.get_ball().update(dt_s)
-        Space.space.step(dt)
+        small_step = dt / 10
+        for _ in range(10):
+            Space.space.step(small_step)
         PlayerManager.keep_in_bounds()
         GoalExplosionManager.update(dt_s)
 

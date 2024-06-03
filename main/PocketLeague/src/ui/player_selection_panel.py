@@ -125,6 +125,7 @@ class PlayerSelectionPanel:
             if keys[0]:
                 self.__active = True
                 self.__update_labels()
+                Sounds.play("menu_button_press")
 
         if self.__active:
             if keys[1]:
@@ -149,6 +150,7 @@ class PlayerSelectionPanel:
 
             if keys[5]:
                 self.__active = False
+                Sounds.play("menu_button_press")
 
             if any(keys):
                 self.__update_labels()

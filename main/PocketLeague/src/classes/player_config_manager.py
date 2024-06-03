@@ -70,14 +70,23 @@ class PlayerConfigManager:
             errors.append(f"Identical players: {', '.join(identical_players)}")
         return errors
 
-    def _use_debug_configs():
+    def _use_debug_configs_2p():
         PlayerConfigManager.__players = [
             PlayerConfig("Marcel", "Team Blue", "red", "red", "regular", 0, "left"),
             PlayerConfig(
                 "Pascal", "Team Orange", "azure", "yellow", "dragons", 0, "right"
             ),
         ]
-        print("Using debug player configs")
+        print("Using debug player configs (2p)")
+
+    def _use_debug_configs_4p():
+        PlayerConfigManager.__players = [
+            PlayerConfig("Marcel", "Team Blue", "red", "red", "regular", 0, "left"),
+            PlayerConfig("Pascal", "Team Orange", "azure", "azure", "dragons", 0, "right"),
+            PlayerConfig("Lena", "Team Blue", "yellow", "yellow", "red explosion", 1, "left"),
+            PlayerConfig("Nahee", "Team Orange", "green", "green", "green explosion", 1, "right"),
+        ]
+        print("Using debug player configs (4p)")
 
     def _inject_test(players):
         for p in players:
