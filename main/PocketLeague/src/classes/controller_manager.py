@@ -7,7 +7,7 @@ class ControllerManager:
 
     screen: pygame.Surface
     fpsclock: pygame.time.Clock
-    controllers: list[px.PlayStationController] = []
+    controllers: list[px.PSController] = []
     __joystick_count: int = 0
     
     def init(screen: pygame.Surface, fpsclock: pygame.time.Clock):
@@ -50,7 +50,7 @@ class ControllerManager:
         ControllerManager.__joystick_count = 0
         for i in range(pygame.joystick.get_count()):
             ControllerManager.controllers.append(
-                px.PlayStationController(i)
+                px.PSController(i)
             )
             ControllerManager.__joystick_count += 1
 

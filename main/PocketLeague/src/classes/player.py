@@ -20,7 +20,7 @@ class Player:
 
         # controller input
         self.__controller_index = None
-        self.__controller: px.PlayStationController = None
+        self.__controller: px.PSController = None
         self.__joystick: int = None  # 0 for left, 1 for right
         self.__boost_button = None
         self.__boost = BOOST_CAPACITY_MAP["regular"] * BOOST_PERCENT_ON_SPAWN
@@ -71,7 +71,11 @@ class Player:
         return self.__current_direction
 
     def get_input_for_boost(self) -> bool:
-        return self.__controller.get_pressed()[self.__boost_button]
+        self.__controller.update()
+        if self.__boost_button == 9:
+            return self.__controller.l1
+        elif self.__boost_button == 10:
+            return self.__controller.r1
 
     def get_input_for_direction(self) -> pygame.Vector2:
         """
@@ -136,7 +140,8 @@ class Player:
         self.__controller_index = controller_index
         self.__joystick = joystick
         self.__boost_button = boost_button
-        self.__controller = px.PlayStationController(self.__controller_index)
+        print(boost_button)
+        self.__controller = px.PSController(self.__controller_index)
 
     def set_name(self, name):
         self.__name = name

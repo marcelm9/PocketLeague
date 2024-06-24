@@ -59,6 +59,9 @@ class Menu:
 
         error_labels = []
 
+        ps_button_pressed_old = False
+        no_quit = False # if set to True, the game will not quit this frame, even if somebody presses the PS button
+
         run = True
         while run:
             event_list = pygame.event.get()
@@ -98,6 +101,14 @@ class Menu:
                 Sounds.play("menu_button_press")
                 Menu.player_config()
                 error_labels.clear()
+                no_quit = True
+            
+            ps_button_pressed = ControllerManager.has_anyone_pressed_ps_button()
+            if not no_quit and not ps_button_pressed_old and ps_button_pressed:
+                pygame.quit()
+                exit()
+            ps_button_pressed_old = ps_button_pressed
+            no_quit = False
 
             Menu.screen.fill(DARK_BLUE)
             title.draw()
