@@ -3,10 +3,12 @@ import time
 
 import pygame
 
-from ..files.config import FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE, FPS
+from ..files.config import FIELD_LEFT_EDGE, FIELD_RIGHT_EDGE
 from ..ui.after_match_screen import AfterMatchScreen
+from ..ui.confirm_screen import ConfirmScreen
 from .ball_manager import BallManager
 from .boost_pads_manager import BoostPadsManager
+from .controller_manager import ControllerManager
 from .field import Field
 from .goal_explosions.goal_explosion_manager import GoalExplosionManager
 from .HUD import HUD
@@ -46,6 +48,11 @@ class Updater:
 
         if MatchStats.get_countdown() > 0:
             MatchStats.reduce_countdown(dt_s)
+
+        if ControllerManager.has_anyone_pressed_ps_button():
+            if ConfirmScreen.ask("Are you sure you want to quit?"):
+                return False
+            Updater.__last_frame_time = time.time()
 
         event_list = pygame.event.get()
         for event in event_list:

@@ -8,6 +8,7 @@ from ..classes.sounds import Sounds
 from ..files.colors import DARK_BLUE, ERROR_LABEL_COLOR, SOFT_WHITE
 from ..files.config import *
 from ..game import Game
+from .confirm_screen import ConfirmScreen
 from .player_selection_panel import PlayerSelectionPanel
 
 PSVG.set_size(BUTTON_DRAWER_SIZE)
@@ -24,6 +25,7 @@ class Menu:
     ControllerManager.enough_controllers()
     ControllerManager.declare_controllers()
     Game.init(screen, fpsclock)
+    ConfirmScreen.init(screen, fpsclock)
 
     def start():
 
@@ -60,7 +62,7 @@ class Menu:
         error_labels = []
 
         ps_button_pressed_old = False
-        no_quit = False # if set to True, the game will not quit this frame, even if somebody presses the PS button
+        no_quit = False  # if set to True, the game will not quit this frame, even if somebody presses the PS button
 
         run = True
         while run:
@@ -102,7 +104,7 @@ class Menu:
                 Menu.player_config()
                 error_labels.clear()
                 no_quit = True
-            
+
             ps_button_pressed = ControllerManager.has_anyone_pressed_ps_button()
             if not no_quit and not ps_button_pressed_old and ps_button_pressed:
                 pygame.quit()
