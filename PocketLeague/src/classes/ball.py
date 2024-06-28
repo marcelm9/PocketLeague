@@ -37,8 +37,8 @@ class Ball:
     def get_shape(self):
         return self.__shape
 
-    def update(self, dt_s):
-        self.__body.velocity *= 0.99
+    def update(self, dt, dt_s):
+        self.__body.velocity *= (1 - 0.01 * dt)
         self.__particles = [p for p in self.__particles if p.time_passed < p.duration]
         self.__particles.append(
             Particle(list(self.get_pos()), (0, 0), BALL_COLOR, 0.09, BALL_RADIUS, 0)

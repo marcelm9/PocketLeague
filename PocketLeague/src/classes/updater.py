@@ -1,4 +1,5 @@
 import random
+import time
 
 import pygame
 
@@ -21,6 +22,8 @@ class Updater:
     __fpsclock: pygame.time.Clock
     __simulation_precision: int = 10
 
+    __last_frame_time: float = None
+
     def init(fpsclock: pygame.time.Clock, simulation_precision: int):
         # needs to be passed in from Game, otherwise the first iteration of .tick is very large
         Updater.__fpsclock = fpsclock
@@ -30,8 +33,16 @@ class Updater:
         Updater.__fpsclock = None
 
     def update():
-        dt = Updater.__fpsclock.tick(FPS)
-        dt_s = dt / 1000
+
+        if Updater.__last_frame_time == None:
+            Updater.__last_frame_time = time.time()
+
+        # framerate independence
+        now = time.time()
+        dt = now - Updater.__last_frame_time
+        dt_s = dt  # save for timers and such
+        dt *= 120
+        Updater.__last_frame_time = now
 
         if MatchStats.get_countdown() > 0:
             MatchStats.reduce_countdown(dt_s)
@@ -76,7 +87,7 @@ class Updater:
 
         HUD.update()
         BoostPadsManager.update(dt_s)
-        ParticleManager.update(dt_s)
+        ParticleManager.update(dt, dt_s)
 
         if MatchStats.get_countdown() > 0:
             return
@@ -88,21 +99,19 @@ class Updater:
         elif state == "overtime":
             MatchStats.increase_overtime(dt_s)
 
-        PlayerManager.update(dt_s)
-        BallManager.get_ball().update(dt_s)
-        small_step = dt / Updater.__simulation_precision
+        PlayerManager.update(dt, dt_s)
+        BallManager.get_ball().update(dt, dt_s)
+        small_step = dt_s / Updater.__simulation_precision
         for _ in range(Updater.__simulation_precision):
             Space.space.step(small_step)
         PlayerManager.keep_in_bounds()
         GoalExplosionManager.update(dt_s)
 
-        # on very rare occasions, the ball is so fast that it sort of
-
         if (
             MatchStats.get_state() == "game"
             and MatchStats.get_match_seconds_left() == 0
         ):
-            if BallManager.get_ball().get_speed() < 0.05:
+            if BallManager.get_ball().get_speed() < 15:
                 if (
                     MatchStats.get_goals_team_blue()
                     != MatchStats.get_goals_team_orange()

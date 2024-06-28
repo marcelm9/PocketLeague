@@ -68,9 +68,9 @@ class PlayerManager:
         return PlayerManager.__players
 
     @staticmethod
-    def update(dt_s):
+    def update(dt, dt_s):
         for player in PlayerManager.__players:
-            player.update(dt_s, PlayerManager.__players)
+            player.update(dt, dt_s, PlayerManager.__players)
 
     @staticmethod
     def draw(surface):

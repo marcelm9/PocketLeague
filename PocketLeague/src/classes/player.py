@@ -140,7 +140,6 @@ class Player:
         self.__controller_index = controller_index
         self.__joystick = joystick
         self.__boost_button = boost_button
-        print(boost_button)
         self.__controller = px.PSController(self.__controller_index)
 
     def set_name(self, name):
@@ -157,7 +156,10 @@ class Player:
     def set_boost_capacity(self, boost_capacity: str):
         self.__max_boost = BOOST_CAPACITY_MAP[boost_capacity]
 
-    def update(self, dt_s, all_players: list):
+    def update(self, dt, dt_s, all_players: list):
+        # somehow, the "dt" is not necessary... i think that is due to the game progressing
+        # via Game.space.step(...)
+
         if self.__is_bot:
             ball = BallManager.get_ball()
             inp = pygame.Vector2(

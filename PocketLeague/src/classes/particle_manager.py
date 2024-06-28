@@ -47,14 +47,14 @@ class ParticleManager:
     def clear():
         ParticleManager.__particles.clear()
 
-    def update(dt_s):
+    def update(dt, dt_s):
         ParticleManager.__particles = [
             p for p in ParticleManager.__particles if p.time_passed < p.duration
         ]
         for p in ParticleManager.__particles:
             p.time_passed += dt_s
-            p.pos[0] += p.vec[0]
-            p.pos[1] += p.vec[1]
+            p.pos[0] += p.vec[0] * dt
+            p.pos[1] += p.vec[1] * dt
 
     def draw(surface: pygame.Surface):
         for p in ParticleManager.__particles:

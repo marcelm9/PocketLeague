@@ -8,7 +8,7 @@
             "name": "Start game",
             "type": "debugpy",
             "request": "launch",
-            "program": "main/PocketLeague/run_game.py",
+            "program": "PocketLeague/run_game.py",
             "console": "integratedTerminal"
         }
     ]

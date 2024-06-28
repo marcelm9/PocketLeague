@@ -75,7 +75,7 @@ class Game:
             Renderer.render()
 
             pygame.display.flip()
-            # pygame.display.set_caption(f"fps: {Game.fpsclock.get_fps()}")
+            Game.fpsclock.tick(FPS)
 
         # reset everything
         Space.reset()
