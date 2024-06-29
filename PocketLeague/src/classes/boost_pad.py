@@ -13,9 +13,8 @@ from .player_manager import PlayerManager
 class BoostPad:
     def __init__(self, center):
         self.__center = center
-        self.reset()
-
         self.__particles: list[Particle] = []
+        self.reset()
 
     def update(self, dt_s):
         if not self.__collectable and (
@@ -25,12 +24,21 @@ class BoostPad:
 
         if self.__collectable:
             # removing old particles
-            self.__particles = [p for p in self.__particles if p.time_passed < p.duration]
+            self.__particles = [
+                p for p in self.__particles if p.time_passed < p.duration
+            ]
 
             # generating a new particle
             r = random.random() * math.pi * 2
             self.__particles.append(
-                Particle(list(self.__center), (math.sin(r) * 0.2, math.cos(r) * 0.2), BOOST_PAD_COLOR_ACTIVE, 0.8, 5, 2)
+                Particle(
+                    list(self.__center),
+                    (math.sin(r) * 0.2, math.cos(r) * 0.2),
+                    BOOST_PAD_COLOR_ACTIVE,
+                    0.8,
+                    5,
+                    2,
+                )
             )
 
             # updating particles
@@ -44,6 +52,7 @@ class BoostPad:
                     player.recharge_boost()
                     self.__last_time_collected = time.time()
                     self.__collectable = False
+                    self.__particles.clear()
 
     def draw(self, surface):
         if self.__collectable:
@@ -66,3 +75,4 @@ class BoostPad:
     def reset(self):
         self.__last_time_collected = 0
         self.__collectable = True
+        self.__particles.clear()

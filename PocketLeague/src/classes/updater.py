@@ -50,9 +50,9 @@ class Updater:
             MatchStats.reduce_countdown(dt_s)
 
         if ControllerManager.has_anyone_pressed_ps_button():
+            Updater.__last_frame_time = None
             if ConfirmScreen.ask("Are you sure you want to quit?"):
                 return False
-            Updater.__last_frame_time = time.time()
 
         event_list = pygame.event.get()
         for event in event_list:
@@ -76,21 +76,6 @@ class Updater:
                     MatchStats._finish_game()
                 elif event.key == pygame.K_RETURN:
                     print(f"{Updater.__fpsclock.get_fps() = }")
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 3:
-                    ParticleManager.create_explosion(
-                        pygame.mouse.get_pos(), 300, 3, (255, 0, 0), 2, 5
-                    )
-
-        if pygame.mouse.get_pressed()[0]:
-            ParticleManager.create_particle(
-                pygame.mouse.get_pos(),
-                (random.random() * 3 - 1.5, random.random() * -3),
-                (255, 204, 0),
-                2,
-                4,
-                0,
-            )
 
         HUD.update()
         BoostPadsManager.update(dt_s)
@@ -137,11 +122,14 @@ class Updater:
 
         if state == "game" or state == "overtime":
             # check for goals
-            ball_pos_x, ball_pos_y = BallManager.get_ball().get_pos()
-            if ball_pos_x < FIELD_LEFT_EDGE or ball_pos_x > FIELD_RIGHT_EDGE:
-                if ball_pos_x < FIELD_LEFT_EDGE and Field.rect_left.collidepoint(
-                    ball_pos_x, ball_pos_y
-                ):
+            in_blue_goal = Field.is_in_blue_goal(
+                BallManager.get_ball().get_pos(), BallManager.get_ball().get_radius()
+            )
+            in_orange_goal = Field.is_in_orange_goal(
+                BallManager.get_ball().get_pos(), BallManager.get_ball().get_radius()
+            )
+            if in_blue_goal or in_orange_goal:
+                if in_blue_goal:
                     # goal right team
                     MatchStats.register_goal("Team Orange")
                     GoalExplosionManager.summon_goal_explosion(
@@ -152,9 +140,7 @@ class Updater:
                         "Team Orange",
                         MatchStats.get_last_player_touch_by_team("Team Orange"),
                     )
-                elif ball_pos_x > FIELD_RIGHT_EDGE and Field.rect_right.collidepoint(
-                    ball_pos_x, ball_pos_y
-                ):
+                elif in_orange_goal:
                     # goal left team
                     MatchStats.register_goal("Team Blue")
                     GoalExplosionManager.summon_goal_explosion(

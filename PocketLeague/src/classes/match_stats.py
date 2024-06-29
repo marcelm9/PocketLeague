@@ -214,8 +214,8 @@ class MatchStats:
                 ball_pos, ball_pos + ball_vect, *Field.get_blue_goal_line()
             )
             and (
-                (ball_pos[0] - Field.get_blue_goal_center()[0]) ** 2
-                + (ball_pos[1] - Field.get_blue_goal_center()[1]) ** 2
+                (ball_pos[0] - Field.get_center_of_blue_goal_line()[0]) ** 2
+                + (ball_pos[1] - Field.get_center_of_blue_goal_line()[1]) ** 2
             )
             < DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED
         ) or (
@@ -224,8 +224,8 @@ class MatchStats:
                 ball_pos, ball_pos + ball_vect, *Field.get_orange_goal_line()
             )
             and (
-                (ball_pos[0] - Field.get_orange_goal_center()[0]) ** 2
-                + (ball_pos[1] - Field.get_orange_goal_center()[1]) ** 2
+                (ball_pos[0] - Field.get_center_of_orange_goal_line()[0]) ** 2
+                + (ball_pos[1] - Field.get_center_of_orange_goal_line()[1]) ** 2
             )
             < DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED
         ):

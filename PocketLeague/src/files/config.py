@@ -87,17 +87,6 @@ MATCH_COUNTDOWN = 3
 
 BOOST_PAD_RECHARGE_TIME = 13
 BOOST_PAD_RADIUS = 13
-fw = 0.9
-fh1 = 0.83
-fh2 = 0.9
-BOOST_SPAWNS = (
-    (CENTER[0] - (FIELD_WIDTH // 2) * fw, CENTER[1] - (FIELD_HEIGHT // 2) * fh1),
-    (CENTER[0], CENTER[1] - (FIELD_HEIGHT // 2) * fh2),
-    (CENTER[0] + (FIELD_WIDTH // 2) * fw, CENTER[1] - (FIELD_HEIGHT // 2) * fh1),
-    (CENTER[0] + (FIELD_WIDTH // 2) * fw, CENTER[1] + (FIELD_HEIGHT // 2) * fh1),
-    (CENTER[0], CENTER[1] + (FIELD_HEIGHT // 2) * fh2),
-    (CENTER[0] - (FIELD_WIDTH // 2) * fw, CENTER[1] + (FIELD_HEIGHT // 2) * fh1),
-)
 
 BOOST_DISPLAY_SIZE = 65
 BOOST_DISPLAY_LINE_SIZE = 20
@@ -127,6 +116,8 @@ DISTANCE_FROM_GOAL_FOR_SHOT_SQUARED = DISTANCE_FROM_GOAL_FOR_SHOT**2
 AFTER_GOAL_SECONDS = 3
 
 # modifiers
+MAPS = ["Regular", "Diagonal"]
+MATCH_TIMES = [i for i in range(60, 301, 30)]
 BALL_BOUNCINESS_MAP = {
     "very low": 0.2,
     "low": 0.5,

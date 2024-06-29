@@ -147,10 +147,10 @@ class Menu:
 
         # map, time, ball bounciness, boost capacity
         possible_values = [
-            ["Default map"],
-            [i for i in range(60, 301, 30)],
-            ["very low", "low", "regular", "high", "very high"],
-            ["off", "low", "regular", "high", "very high", "unlimited"],
+            MAPS,
+            MATCH_TIMES,
+            list(BALL_BOUNCINESS_MAP.keys()),
+            list(BOOST_CAPACITY_MAP.keys()),
         ]
         value_indexes_max = [
             len(possible_values[i]) - 1 for i in range(len(possible_values))

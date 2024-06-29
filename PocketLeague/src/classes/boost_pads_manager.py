@@ -1,12 +1,13 @@
 from .boost_pad import BoostPad
-from ..files.config import BOOST_SPAWNS
+from .field import Field
+
 
 class BoostPadsManager:
 
     __pads: list[BoostPad] = []
 
     def init():
-        for pos in BOOST_SPAWNS:
+        for pos in Field.get_boostpads():
             BoostPadsManager.__pads.append(BoostPad(pos))
 
     def reset():

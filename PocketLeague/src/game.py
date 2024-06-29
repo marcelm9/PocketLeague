@@ -44,7 +44,7 @@ class Game:
                 cfg.boost_type,
                 cfg.controller_id,
                 cfg.controller_side,
-                Game.__boost_capacity
+                Game.__boost_capacity,
             )
 
     def set_settings(map: str, time: int, ball_bounciness: float, boost_capacity):
@@ -57,7 +57,8 @@ class Game:
 
         Space.init(MatchStats.handle_player_ball_collision)
         Game.__configure_players()
-        Field.init()
+        Field.init(Game.__map)
+        BoostPadsManager.init()
         Updater.init(Game.fpsclock, SIMULATION_PRECISION_MAP[Game.__ball_bounciness])
         AfterMatchScreen.init(Game.fpsclock, Game.screen)
         Renderer.init(Game.screen)
@@ -65,7 +66,6 @@ class Game:
         HUD.init(Game.screen)
         PlayerManager.respawn_players()
         HUD.update_time_display()
-        BoostPadsManager.init()
         BallManager.create_ball(BALL_BOUNCINESS_MAP[Game.__ball_bounciness])
 
         while True:

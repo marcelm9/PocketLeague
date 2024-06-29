@@ -8,12 +8,12 @@ from .space import Space
 
 class Ball:
     def __init__(self, ball_bounciness):
-        self.radius = BALL_RADIUS
+        self.__radius = BALL_RADIUS
 
         self.__body = pymunk.Body(body_type=pymunk.Body.DYNAMIC)
         self.__body.position = BALL_SPAWN
         self.__body.mass = 1
-        self.__shape = pymunk.Circle(self.__body, radius=self.radius)
+        self.__shape = pymunk.Circle(self.__body, radius=self.__radius)
         self.__shape.collision_type = 0
         self.__shape.density = 1
         self.__shape.elasticity = ball_bounciness
@@ -22,7 +22,7 @@ class Ball:
 
         def limit_velocity(body, gravity, damping, dt):
             vx, vy = body.velocity
-            speed = (vx ** 2 + vy ** 2) ** 0.5
+            speed = (vx**2 + vy**2) ** 0.5
             if speed > BALL_MAX_SPEED:
                 scale = BALL_MAX_SPEED / speed
                 body.velocity = vx * scale, vy * scale
@@ -37,8 +37,11 @@ class Ball:
     def get_shape(self):
         return self.__shape
 
+    def get_radius(self):
+        return self.__radius
+
     def update(self, dt, dt_s):
-        self.__body.velocity *= (1 - 0.01 * dt)
+        self.__body.velocity *= 1 - 0.01 * dt
         self.__particles = [p for p in self.__particles if p.time_passed < p.duration]
         self.__particles.append(
             Particle(list(self.get_pos()), (0, 0), BALL_COLOR, 0.09, BALL_RADIUS, 0)
@@ -47,7 +50,7 @@ class Ball:
             p.time_passed += dt_s
 
     def draw(self, surface):
-        pygame.draw.circle(surface, BALL_COLOR, self.__body.position, self.radius)
+        pygame.draw.circle(surface, BALL_COLOR, self.__body.position, self.__radius)
         for p in self.__particles:
             pygame.draw.circle(
                 surface,
