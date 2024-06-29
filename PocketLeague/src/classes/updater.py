@@ -123,6 +123,7 @@ class Updater:
                     MatchStats.get_goals_team_blue()
                     != MatchStats.get_goals_team_orange()
                 ):
+                    Updater.__last_frame_time = None
                     return AfterMatchScreen.show()
                 else:
                     MatchStats.set_state("overtime")
@@ -185,4 +186,5 @@ class Updater:
                     Sounds.stop_all_boost_sounds()
                 elif MatchStats.get_state() == "aftergoal_ot":
                     Sounds.stop_all_boost_sounds()
+                    Updater.__last_frame_time = None
                     return AfterMatchScreen.show()
